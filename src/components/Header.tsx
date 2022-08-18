@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, NavLink, Link } from 'react-router-dom';
 
 import { useState, FC } from 'react';
 import { styled, alpha } from '@mui/material/styles';
@@ -17,6 +17,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 
+import Layout from '../layout';
 import MainPage from '../pages/mainPage';
 import PersonalPage from '../pages/personalPage';
 import NotFoundPage from '../pages/notFoundPage';
@@ -44,8 +45,7 @@ const Header: FC = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component="span"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -56,7 +56,7 @@ const Header: FC = () => {
               textDecoration: 'none',
             }}
           >
-            QUIZLET
+            <Link to="/">QUIZLET</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -90,8 +90,14 @@ const Header: FC = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page.page} onClick={handleCloseNavMenu}>
-                  <Typography component="a" href={page.link} textAlign="center">
-                    {page.page}
+                  <Typography textAlign="center">
+                    <NavLink
+                      style={{ textDecoration: 'none' }}
+                      className={({ isActive }) => (isActive ? 'Mui-active' : '')}
+                      to={page.link}
+                    >
+                      {page.page}
+                    </NavLink>
                   </Typography>
                 </MenuItem>
               ))}
@@ -100,8 +106,7 @@ const Header: FC = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="/"
+            component="span"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -113,15 +118,20 @@ const Header: FC = () => {
               textDecoration: 'none',
             }}
           >
-            QUIZLET
+            <Link to="/">QUIZLET</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link to={page.link} key={page.page}>
+              <NavLink
+                style={{ textDecoration: 'none' }}
+                className={({ isActive }) => (isActive ? 'Mui-active' : '')}
+                to={page.link}
+                key={page.page}
+              >
                 <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
                   {page.page}
                 </Button>
-              </Link>
+              </NavLink>
             ))}
           </Box>
           <Search>
@@ -132,9 +142,11 @@ const Header: FC = () => {
           </Search>
         </Toolbar>
         <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/personal" element={<PersonalPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<MainPage />} />
+            <Route path="personal" element={<PersonalPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
         </Routes>
       </Container>
     </AppBar>

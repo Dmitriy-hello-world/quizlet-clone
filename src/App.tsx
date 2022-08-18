@@ -1,13 +1,13 @@
 import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import Header from './components/Header';
+import Layout from './layout';
 
 const App = () => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Header />
+      <Layout />
     </React.Fragment>
   );
 };
