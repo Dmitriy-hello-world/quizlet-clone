@@ -2,10 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
+import { userReducer } from '../features/user/userSlice';
+
 import * as api from './configAPI';
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    user: userReducer,
+  },
   devTools: true,
   middleware: (setDefaultMiddleware) =>
     setDefaultMiddleware({
@@ -14,6 +18,7 @@ export const store = configureStore({
           client: axios,
           api,
         },
+        serializableCheck: false,
       },
     }),
 });
@@ -21,4 +26,8 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
+
+export type axiosType = typeof axios;
+export type apiType = typeof api;
+
 export const useAppDispatch: () => AppDispatch = useDispatch;

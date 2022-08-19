@@ -14,8 +14,11 @@ import {
   Button,
   MenuItem,
 } from '@mui/material';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+
+import AccountInHeader from '../features/user/AccountInHeader.tsx';
 
 const pages = [
   { page: 'Home', link: '/' },
@@ -142,6 +145,7 @@ const Header: FC = () => {
             </SearchIconWrapper>
             <StyledInputBase placeholder="Search modules" inputProps={{ 'aria-label': 'search' }} />
           </Search>
+          <AccountInHeader />
         </Toolbar>
       </Container>
     </AppBar>

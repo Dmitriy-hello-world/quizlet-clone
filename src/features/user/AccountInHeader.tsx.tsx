@@ -1,8 +1,12 @@
-import { FC, useState, Fragment } from 'react';
-
+import { FC, useState, Fragment, useEffect } from 'react';
+// import { useSelector } from 'react-redux';
 import { Box, Avatar, Menu, MenuItem, ListItemIcon, Divider, IconButton, Typography, Tooltip } from '@mui/material';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+
+import { useAppDispatch } from '../../store/store';
+
+// import { loadUser, getUserSelector, getUserLoadingInfo } from './userSlice';
 
 const AccountInHeader: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -13,6 +17,16 @@ const AccountInHeader: FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const dispatch = useAppDispatch();
+  // const user = useSelector(getUserSelector);
+  // const { status, error } = useSelector(getUserLoadingInfo);
+
+  // useEffect(() => {
+  //   if (status !== 'received') {
+  //     dispatch(loadUser());
+  //   }
+  // }, [dispatch]);
+
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
