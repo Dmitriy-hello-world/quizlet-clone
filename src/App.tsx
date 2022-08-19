@@ -1,14 +1,15 @@
-import React from 'react';
+import { Fragment } from 'react';
+
 import CssBaseline from '@mui/material/CssBaseline';
 
-import Layout from './layout';
+import RootRouter from './router/rootRouter';
 
 const App = () => {
   return (
-    <React.Fragment>
+    <Fragment>
       <CssBaseline />
-      <Layout />
-    </React.Fragment>
+      <RootRouter />
+    </Fragment>
   );
 };
 

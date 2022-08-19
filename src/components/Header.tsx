@@ -1,4 +1,4 @@
-import { Routes, Route, NavLink, Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import { useState, FC } from 'react';
 import { styled, alpha } from '@mui/material/styles';
@@ -16,11 +16,6 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-
-import Layout from '../layout';
-import MainPage from '../pages/mainPage';
-import PersonalPage from '../pages/personalPage';
-import NotFoundPage from '../pages/notFoundPage';
 
 const pages = [
   { page: 'Home', link: '/' },
@@ -56,7 +51,9 @@ const Header: FC = () => {
               textDecoration: 'none',
             }}
           >
-            <Link to="/">QUIZLET</Link>
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
+              QUIZLET
+            </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -92,8 +89,10 @@ const Header: FC = () => {
                 <MenuItem key={page.page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
                     <NavLink
-                      style={{ textDecoration: 'none' }}
-                      className={({ isActive }) => (isActive ? 'Mui-active' : '')}
+                      style={({ isActive }) => ({
+                        color: isActive ? 'blue' : 'grey',
+                        textDecoration: 'none',
+                      })}
                       to={page.link}
                     >
                       {page.page}
@@ -118,20 +117,23 @@ const Header: FC = () => {
               textDecoration: 'none',
             }}
           >
-            <Link to="/">QUIZLET</Link>
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
+              QUIZLET
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <NavLink
-                style={{ textDecoration: 'none' }}
-                className={({ isActive }) => (isActive ? 'Mui-active' : '')}
-                to={page.link}
-                key={page.page}
-              >
-                <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+              <Button onClick={handleCloseNavMenu} key={page.page} sx={{ my: 2, color: 'white', display: 'block' }}>
+                <NavLink
+                  style={({ isActive }) => ({
+                    color: isActive ? 'black' : 'white',
+                    textDecoration: 'none',
+                  })}
+                  to={page.link}
+                >
                   {page.page}
-                </Button>
-              </NavLink>
+                </NavLink>
+              </Button>
             ))}
           </Box>
           <Search>
@@ -141,13 +143,6 @@ const Header: FC = () => {
             <StyledInputBase placeholder="Search modules" inputProps={{ 'aria-label': 'search' }} />
           </Search>
         </Toolbar>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<MainPage />} />
-            <Route path="personal" element={<PersonalPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
       </Container>
     </AppBar>
   );
