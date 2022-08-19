@@ -2,6 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
+import * as api from './configAPI';
+
 export const store = configureStore({
   reducer: {},
   devTools: true,
@@ -10,6 +12,7 @@ export const store = configureStore({
       thunk: {
         extraArgument: {
           client: axios,
+          api,
         },
       },
     }),
