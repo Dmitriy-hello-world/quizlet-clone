@@ -1,12 +1,12 @@
-import { FC, useState, Fragment, useEffect } from 'react';
-// import { useSelector } from 'react-redux';
+import { FC, useState, Fragment, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { Box, Avatar, Menu, MenuItem, ListItemIcon, Divider, IconButton, Typography, Tooltip } from '@mui/material';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 import { useAppDispatch } from '../../store/store';
 
-// import { loadUser, getUserSelector, getUserLoadingInfo } from './userSlice';
+import { loadUser, getUserInfoSelector } from './userSlice';
 
 const AccountInHeader: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -18,14 +18,15 @@ const AccountInHeader: FC = () => {
     setAnchorEl(null);
   };
   const dispatch = useAppDispatch();
-  // const user = useSelector(getUserSelector);
-  // const { status, error } = useSelector(getUserLoadingInfo);
+  const { user, status, error } = useSelector(getUserInfoSelector);
 
-  // useEffect(() => {
-  //   if (status !== 'received') {
-  //     dispatch(loadUser());
-  //   }
-  // }, [dispatch]);
+  const callUseEffectOnce = useRef(true);
+  useEffect(() => {
+    if (callUseEffectOnce.current) {
+      callUseEffectOnce.current = false;
+      dispatch(loadUser());
+    }
+  }, [dispatch]);
 
   return (
     <Fragment>

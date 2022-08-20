@@ -66,8 +66,4 @@ const userSlice = createSlice({
 
 export const userReducer = userSlice.reducer;
 
-export const getUserSelector = (state: RootState) => state.user.user;
-export const getUserLoadingInfo = (state: InitialState) => ({
-  status: state.status,
-  error: state.error,
-});
+export const getUserInfoSelector = (state: RootState) => state.user;
