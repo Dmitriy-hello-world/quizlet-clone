@@ -1,0 +1,7 @@
+import controllers from './controllers/index.mjs';
+
+export default async (router) => {
+    const checkSession = controllers.sessions.check;
+
+    // {{GENERATE_NEW_ROUTS_BELOW}}
+};
