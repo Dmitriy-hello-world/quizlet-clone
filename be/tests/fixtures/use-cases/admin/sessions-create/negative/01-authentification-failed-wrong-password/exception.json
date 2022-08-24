@@ -1,7 +1,0 @@
-{
-    "code": "AUTHENTICATION_FAILED",
-    "fields": {
-        "email"    : "INVALID",
-        "password" : "INVALID"
-    }
-}

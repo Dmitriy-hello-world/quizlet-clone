@@ -8,9 +8,9 @@ class Module extends Base {
         id                : { type: DT.UUID, defaultValue: DT.UUIDV4, primaryKey: true },
         userId            : { type: DT.UUID, unique: true, allowNull: false },
         name              : { type: DT.STRING, allowNull: false },
-        description       : { type: DT.TINYTEXT, allowNull: true },
-        private           : { type: DT.BOOL, defaultValue: true },
-        editedByOutsiders : { type: DT.BOOL, defaultValue: false }
+        description       : { type: DT.TEXT('tiny'), allowNull: true },
+        private           : { type: DT.BOOLEAN, defaultValue: true },
+        editedByOutsiders : { type: DT.BOOLEAN, defaultValue: false }
     }
 
     static initRelations() {

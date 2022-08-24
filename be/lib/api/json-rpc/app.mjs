@@ -9,7 +9,6 @@ import connectionsPool    from './connectionsPool.mjs';
 import * as chista        from './chista.mjs';
 
 import mainMethods        from './main/index.mjs';
-import adminMethods       from './admin/index.mjs';
 
 let server = null;
 
@@ -17,7 +16,6 @@ export async function start({ wssPort }) {
     server = new MoleServer({ transports: prepareTransports({ wssPort }) });
     server.expose({
         ...mainMethods,
-        ...adminMethods,
         // TODO: remove on json rpc sessions complete
         register : (data) => {
             const ws = clsNamespace.get('ws');
