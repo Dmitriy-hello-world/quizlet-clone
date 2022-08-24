@@ -6,9 +6,9 @@ module.exports = {
             id                : { type: Sequelize.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
             userId            : { type: Sequelize.UUID, unique: true, allowNull: false },
             name              : { type: Sequelize.STRING, allowNull: false },
-            description       : { type: Sequelize.TINYTEXT, allowNull: true },
-            private           : { type: Sequelize.BOOL, defaultValue: true },
-            editedByOutsiders : { type: Sequelize.BOOL, defaultValue: false },
+            description       : { type: Sequelize.TEXT('tiny'), allowNull: true },
+            private           : { type: Sequelize.BOOLEAN, defaultValue: true },
+            editedByOutsiders : { type: Sequelize.BOOLEAN, defaultValue: false },
             createdAt         : { type: Sequelize.DATE, allowNull: false },
             updatedAt         : { type: Sequelize.DATE, allowNull: false }
         });

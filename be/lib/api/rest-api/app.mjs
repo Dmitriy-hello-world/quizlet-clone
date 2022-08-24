@@ -3,7 +3,6 @@ import Fastify       from 'fastify';
 
 import logger        from '../logger.mjs';
 import middlewares   from './middlewares.mjs';
-import adminRouter   from './admin/router.mjs';
 import mainRouter    from './main/router.mjs';
 
 // Init app
@@ -19,12 +18,11 @@ export async function start(appPort) {
     app.use(middlewares.include);
 
     // routes init
-    app.register(adminRouter, { prefix: '/api/v1/admin' });
     app.register(mainRouter, { prefix: '/api/v1' });
 
-    await app.listen(appPort);
+    await app.listen({ port: appPort, host: '0.0.0.0' });
 
-    const { port, address } = app.addresses().find(({ family }) => family === 'IPv4');
+    const { port = '8000', address = '0.0.0.0' } = app.addresses().find(({ family }) => family === 'IPv4');
 
     global.REST_API_PORT = port; // For tests. TODO: export app and use it tests
     logger.info(`[RestApiApp] STARTING AT PORT [${port}] ADDRESS [${address}]`);

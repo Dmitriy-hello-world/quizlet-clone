@@ -1,8 +1,0 @@
-{
-    "data": { "nested_object": {
-        "id": ["required", "uuid"],
-        "email": {"is": "admin1@gmail.com"},
-        "createdAt": { "iso_date": {"min": "current", "format": "datetime"} },
-        "updatedAt": { "iso_date": {"min": "current", "format": "datetime"} }
-    }}
-}

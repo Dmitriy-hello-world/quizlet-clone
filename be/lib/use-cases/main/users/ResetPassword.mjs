@@ -4,7 +4,6 @@ import {
 import Base        from '../../Base.mjs';
 import User        from '../../../domain-model/User.mjs';
 import DMX         from '../../../domain-model/X.mjs';
-import StoredTriggerableAction, { TYPES as ActionTypes } from '../../../domain-model/StoredTriggerableAction.mjs';
 
 export default class UsersResetPassword extends Base {
     static validationRules = {
@@ -23,18 +22,6 @@ export default class UsersResetPassword extends Base {
                     fields : { email: 'USER_NOT_FOUND' }
                 });
             }
-
-            const action = await StoredTriggerableAction.create({
-                type    : ActionTypes.RESET_USER_PASSWORD,
-                payload : {
-                    userId : user.id
-                }
-            });
-
-            await this.notificator.notify('RESET_PASSWORD', user.email, {
-                ...user,
-                actionId : action.id
-            });
 
             return {};
         } catch (x) {

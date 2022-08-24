@@ -1,4 +1,0 @@
-{
-    "id": ["required", "uuid"],
-    "iat": "integer"
-}
