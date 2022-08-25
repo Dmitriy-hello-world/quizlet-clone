@@ -28,12 +28,15 @@ const AccountInHeader: FC = () => {
     }
   }, [dispatch]);
 
+  const isAuthorized = true;
+
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
-        <Tooltip title="Account settings">
+        <Typography sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
+          {user.firstName !== null && isAuthorized ? user.firstName : 'log in'}
+        </Typography>
+        <Tooltip title="Account">
           <IconButton
             onClick={handleClick}
             size="small"
@@ -42,7 +45,9 @@ const AccountInHeader: FC = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>
+              {user.firstName !== null && isAuthorized ? user.firstName[0] : 'L'}
+            </Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -81,22 +86,31 @@ const AccountInHeader: FC = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
-          <Avatar /> Profile
+        <MenuItem key="0">
+          <Avatar />{' '}
+          {user.firstName !== null && user.secondName !== null && isAuthorized
+            ? `${user.firstName} ${user.secondName}`
+            : 'profile'}
         </MenuItem>
         <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
+        {isAuthorized ? (
+          [
+            <MenuItem key="1">
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>,
+            <MenuItem key="2">
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>,
+          ]
+        ) : (
+          <MenuItem key="3">Log in</MenuItem>
+        )}
       </Menu>
     </Fragment>
   );
