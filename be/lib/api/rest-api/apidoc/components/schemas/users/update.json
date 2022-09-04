@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+        "firstName" : {
+            "type": "string"
+        },
+        "secondName": {
+            "type": "string"
+        },
+        "avatar" : {
+            "type": "string"
+        }
+    }
+}

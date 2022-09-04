@@ -14,7 +14,6 @@ export default {
 
             return chista.renderPromiseAsJson(req, res, promise);
         } catch (error) {
-            console.error(error);
             res.send({
                 status : 0,
                 error  : {

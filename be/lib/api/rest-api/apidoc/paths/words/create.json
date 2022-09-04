@@ -1,0 +1,15 @@
+{
+    "tags": [
+        "words"
+    ],
+    "summary": "Create word",
+    "requestBody": {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "../../components/schemas/words/create.json"
+                }
+            }
+        }
+    }
+}

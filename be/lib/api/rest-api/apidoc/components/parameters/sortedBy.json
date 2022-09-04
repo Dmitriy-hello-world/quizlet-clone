@@ -1,0 +1,9 @@
+{
+    "in": "query",
+    "name": "sortedBy",
+    "description": "Field for sorting",
+    "schema": {
+        "type": "string",
+        "enum": [ "id", "firstName", "secondName", "email", "createdAt", "updatedAt" ]
+    }
+}

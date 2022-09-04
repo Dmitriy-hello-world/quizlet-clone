@@ -3,6 +3,7 @@ import controllers from './controllers/index.mjs';
 export default async (router) => {
     const checkSession = controllers.sessions.check;
 
+    // Users
     router.register(async (secureRouter) => {
         secureRouter.addHook('preHandler', checkSession);
 
@@ -11,6 +12,26 @@ export default async (router) => {
         secureRouter.put('/:id',    controllers.users.update);
         secureRouter.delete('/:id', controllers.users.delete);
     }, { prefix: '/users' });
+
+    // Words
+    router.register(async (secureRouter) => {
+        secureRouter.addHook('preHandler', checkSession);
+
+        secureRouter.post('/',      controllers.words.create);
+        secureRouter.put('/:id',    controllers.words.update);
+        secureRouter.delete('/:id', controllers.words.delete);
+    }, { prefix: '/words' });
+
+    // Modules
+    router.register(async (secureRouter) => {
+        secureRouter.addHook('preHandler', checkSession);
+
+        secureRouter.get('/:id',    controllers.modules.show);
+        secureRouter.get('/',       controllers.modules.list);
+        secureRouter.post('/',      controllers.modules.create);
+        secureRouter.put('/:id',    controllers.modules.update);
+        secureRouter.delete('/:id', controllers.modules.delete);
+    }, { prefix: '/modules' });
 
     // Sessions
     router.post('/sessions', controllers.sessions.create);

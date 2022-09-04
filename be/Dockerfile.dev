@@ -1,0 +1,12 @@
+FROM node:16.17.0-alpine
+
+WORKDIR /app
+COPY . .
+RUN npm install
+
+ENV DB_HOST=db
+
+ENV PORT=8000
+EXPOSE 8000
+
+CMD [ "npm", "run", "nodemon"]

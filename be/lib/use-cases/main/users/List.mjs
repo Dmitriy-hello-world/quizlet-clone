@@ -34,9 +34,8 @@ export default class UsersList extends Base {
             offset
         };
 
-        const [ users, filteredCount, totalCount ] = await Promise.all([
-            User.findAll(dbRequest),
-            User.count({ where: findQuery }),
+        const [ { count: filteredCount, rows: users }, totalCount ] = await Promise.all([
+            User.findAndCountAll(dbRequest),
             User.count()
         ]);
 

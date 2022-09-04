@@ -5,7 +5,7 @@ import Module from './Module.mjs';
 class Word extends Base {
     static schema = {
         id         : { type: DT.UUID, defaultValue: DT.UUIDV4, primaryKey: true },
-        moduleId   : { type: DT.UUID, unique: true, allowNull: false  },
+        moduleId   : { type: DT.UUID, allowNull: false  },
         term       : { type: DT.STRING, allowNull: false },
         definition : { type: DT.STRING, allowNull: false },
         imageUrl   : { type: DT.STRING }

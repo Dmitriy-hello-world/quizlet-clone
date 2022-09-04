@@ -16,9 +16,14 @@ export default class SessionsCheck extends Base {
     async execute({ token }) {
         try {
             const userData = await verifyToken(token);
-            const user = await User.findById(userData.id);
+            const user = await User.findByPk(userData.id);
 
-            if (user.status !== 'ACTIVE') throw new Error('USER_NOT_ACTIVE');
+            if (!user) {
+                throw new X({
+                    code   : 'WRONG_TOKEN',
+                    fields : { token: 'USER_NOT_EXIST' }
+                });
+            }
 
             return userData;
         } catch (x) {
@@ -26,13 +31,6 @@ export default class SessionsCheck extends Base {
                 throw new X({
                     code   : 'WRONG_TOKEN',
                     fields : { token: 'WRONG_ID' }
-                });
-            }
-
-            if (x instanceof DMX.InactiveObject) {
-                throw new X({
-                    code   : 'WRONG_TOKEN',
-                    fields : { token: 'USER_NOT_ACTIVE' }
                 });
             }
 

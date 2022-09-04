@@ -1,0 +1,9 @@
+{
+    "name": "Authorization",
+    "in": "header",
+    "description": "jwt token",
+    "schema": {
+        "type": "string"
+    },
+    "required": true
+}
