@@ -1,0 +1,14 @@
+{
+    "tags": [
+        "users"
+    ],
+    "summary": "Delete user",
+    "parameters": [
+        {
+            "$ref": "../../components/parameters/jwtToken.json"
+        },
+        {
+            "$ref": "../../components/parameters/id.json"
+        }
+    ]
+}

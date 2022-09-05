@@ -1,0 +1,8 @@
+{
+    "name": "search",
+    "in": "query",
+    "description": "Search for entity",
+    "schema": {
+        "type": "string"
+    }
+}

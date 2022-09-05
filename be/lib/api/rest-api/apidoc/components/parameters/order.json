@@ -1,0 +1,12 @@
+{
+    "in": "query",
+    "name": "order",
+    "description": "Sort order",
+    "schema": {
+        "type": "string",
+        "enum": [
+            "ASC",
+            "DESC"
+        ]
+    }
+}

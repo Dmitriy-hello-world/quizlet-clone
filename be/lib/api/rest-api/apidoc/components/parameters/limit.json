@@ -1,0 +1,11 @@
+{
+    "in": "query",
+    "name": "limit",
+    "description": "The number of rows to return",
+    "schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 20,
+        "default": 20
+    }
+}

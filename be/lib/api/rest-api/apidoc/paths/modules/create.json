@@ -1,0 +1,15 @@
+{
+    "tags": [
+        "modules"
+    ],
+    "summary": "Create module",
+    "requestBody": {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "../../components/schemas/modules/create.json"
+                }
+            }
+        }
+    }
+}

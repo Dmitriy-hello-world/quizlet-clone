@@ -1,0 +1,17 @@
+{
+    "type": "object",
+    "properties": {
+        "moduleId": {
+            "type": "string"
+        },
+        "term": {
+            "type": "string"
+        },
+        "definition": {
+            "type": "string"
+        },
+        "imageUrl" : {
+            "type": "string"
+        }
+    }
+}

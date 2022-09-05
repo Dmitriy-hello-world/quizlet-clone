@@ -1,0 +1,23 @@
+{
+    "tags": [
+        "users"
+    ],
+    "summary": "Update user",
+    "parameters": [
+        {
+            "$ref": "../../components/parameters/jwtToken.json"
+        },
+        {
+            "$ref": "../../components/parameters/id.json"
+        }
+    ],
+    "requestBody": {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "../../components/schemas/users/update.json"
+                }
+            }
+        }
+    }
+}
