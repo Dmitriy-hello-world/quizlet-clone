@@ -3,12 +3,14 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 import { userReducer } from '../features/user/userSlice';
+import { modalReducer } from '../features/modal/modalSlice';
 
 import * as api from './configAPI';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    modal: modalReducer,
   },
   devTools: true,
   middleware: (setDefaultMiddleware) =>

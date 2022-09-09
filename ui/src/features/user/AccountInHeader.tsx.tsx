@@ -5,6 +5,7 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 import { useAppDispatch } from '../../store/store';
+import { openModal } from '../modal/modalSlice';
 
 import { loadUser, getUserInfoSelector } from './userSlice';
 
@@ -19,8 +20,10 @@ const AccountInHeader: FC = () => {
   };
   const dispatch = useAppDispatch();
   const { user, status, error } = useSelector(getUserInfoSelector);
-
   const callUseEffectOnce = useRef(true);
+  const isAuthorized = false;
+  const handleOpenModal = (type: 'log' | 'reg') => dispatch(openModal(type));
+
   useEffect(() => {
     if (callUseEffectOnce.current) {
       callUseEffectOnce.current = false;
@@ -28,14 +31,18 @@ const AccountInHeader: FC = () => {
     }
   }, [dispatch]);
 
-  const isAuthorized = true;
-
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
-          {user.firstName !== null && isAuthorized ? user.firstName : 'log in'}
-        </Typography>
+        {user.firstName !== null && isAuthorized ? (
+          <Typography onClick={handleClick} sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
+            {user.firstName}
+          </Typography>
+        ) : (
+          <Typography onClick={() => handleOpenModal('log')} sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
+            Log In
+          </Typography>
+        )}
         <Tooltip title="Account">
           <IconButton
             onClick={handleClick}
@@ -86,31 +93,36 @@ const AccountInHeader: FC = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem key="0">
-          <Avatar />{' '}
-          {user.firstName !== null && user.secondName !== null && isAuthorized
-            ? `${user.firstName} ${user.secondName}`
-            : 'profile'}
-        </MenuItem>
-        <Divider />
-        {isAuthorized ? (
-          [
-            <MenuItem key="1">
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>,
-            <MenuItem key="2">
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>,
-          ]
-        ) : (
-          <MenuItem key="3">Log in</MenuItem>
-        )}
+        {isAuthorized
+          ? [
+              <MenuItem key="0">
+                <Avatar />{' '}
+                {user.firstName !== null && user.secondName !== null && isAuthorized
+                  ? `${user.firstName} ${user.secondName}`
+                  : 'profile'}
+              </MenuItem>,
+              <Divider key="1" />,
+              <MenuItem key="2">
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Settings
+              </MenuItem>,
+              <MenuItem key="3">
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>,
+            ]
+          : [
+              <MenuItem key="4" onClick={() => handleOpenModal('log')}>
+                Log in
+              </MenuItem>,
+              <MenuItem key="5" onClick={() => handleOpenModal('reg')}>
+                Registration
+              </MenuItem>,
+            ]}
       </Menu>
     </Fragment>
   );

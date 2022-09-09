@@ -26,7 +26,7 @@
     "@typescript-eslint/quotes": ["error"],
     "jsx-quotes": ["error", "prefer-double"],
     "prefer-const": "error",
-    "indent": ["error", 2],
+    "indent": "off",
     "max-len": ["error", { "code": 120 }],
     "semi": ["warn", "always"],
     "import/order": [
