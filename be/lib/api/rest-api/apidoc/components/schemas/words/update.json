@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+        "term" : {
+            "type": "string"
+        },
+        "definition": {
+            "type": "string"
+        },
+        "imageUrl" : {
+            "type": "string"
+        }
+    }
+}

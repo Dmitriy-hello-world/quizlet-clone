@@ -28,15 +28,6 @@ export default class SessionsCreate extends Base {
             });
         }
 
-        if (existingUser.status !== 'ACTIVE') {
-            throw new X({
-                code   : 'AUTHENTICATION_FAILED',
-                fields : {
-                    status : 'NOT_ACTIVE_USER'
-                }
-            });
-        }
-
         return {
             data : {
                 jwt : generateToken({ id: existingUser.id })

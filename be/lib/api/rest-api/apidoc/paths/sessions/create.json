@@ -1,0 +1,60 @@
+{
+    "tags": [
+        "sessions"
+    ],
+    "summary": "Create session",
+    "requestBody": {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "data": {
+                            "type": "object",
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "value": "testpassword"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "value": "test@mail.com"
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "email",
+                        "password"
+                    ]
+                }
+            }
+        }
+    },
+    "responses": {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "object",
+                                "properties": {
+                                    "jwt": {
+                                        "type": "string",
+                                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUxY2Y2MDk2LWE1ZDUtNDNiMS1iOTQwLTE0ZWYyMjQwMTY2MSIsImlhdCI6MTY2MjMxNTk1OX0.qqEp2aSvFkaxQyDLs3C_Rt-HydoYMNex9zQkPrcTd54"
+                                    }
+                                }
+                            },
+                            "status": {
+                                "type": "number",
+                                "example": 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

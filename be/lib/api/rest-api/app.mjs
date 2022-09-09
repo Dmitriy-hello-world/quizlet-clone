@@ -1,4 +1,6 @@
 /* eslint import/imports-first:0  import/newline-after-import:0 */
+import path          from 'node:path';
+import { fileURLToPath } from 'url';
 import Fastify       from 'fastify';
 
 import logger        from '../logger.mjs';
@@ -7,6 +9,7 @@ import mainRouter    from './main/router.mjs';
 
 // Init app
 const app = Fastify();
+const __filename = fileURLToPath(import.meta.url);
 
 export async function start(appPort) {
     await app.register(import('@fastify/middie'));
@@ -16,6 +19,11 @@ export async function start(appPort) {
     // middlewares init
     app.use(middlewares.cors);
     app.use(middlewares.include);
+
+    app.register(import('@fastify/static'), {
+        root   : path.join(path.dirname(__filename), 'apidoc'),
+        prefix : '/swagger'
+    });
 
     // routes init
     app.register(mainRouter, { prefix: '/api/v1' });

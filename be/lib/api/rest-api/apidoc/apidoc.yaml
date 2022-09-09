@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'API'
+  description: 'Memorizer API'
+
+servers:
+  - description: be
+    url: /api/v1
+
+tags:
+  - name: users
+    description: users API
+  - name: sessions
+    description: sessions API
+  - name: modules
+    description: modules API
+  - name: words
+    description: words API
+
+security:
+  - basicAuth: []
+
+paths:
+  /sessions:
+    post:
+      tags:
+        - sessions
+      $ref: 'paths/sessions/create.json'
+  /users:
+    post:
+      tags:
+        - users
+      $ref: 'paths/users/create.json'
+    get:
+      tags:
+        - users
+      $ref: 'paths/users/list.json'
+  /users/{id}:
+    get:
+      tags:
+        - users
+      $ref: 'paths/users/show.json'
+    delete:
+      tags:
+        - users
+      $ref: 'paths/users/delete.json'
+    put:
+      tags:
+        - users
+      $ref: 'paths/users/update.json'
+  /modules:
+    post:
+      tags:
+        - modules
+      $ref: 'paths/modules/create.json'
+    get:
+      tags:
+        - modules
+      $ref: 'paths/modules/list.json'
+  /modules/{id}:
+    get:
+      tags:
+        - modules
+      $ref: 'paths/modules/show.json'
+    delete:
+      tags:
+        - modules
+      $ref: 'paths/modules/delete.json'
+    put:
+      tags:
+        - modules
+      $ref: 'paths/modules/update.json'
+  /words:
+    post:
+      tags:
+        - words
+      $ref: 'paths/words/create.json'
+  /words/{id}:
+    delete:
+      tags:
+        - words
+      $ref: 'paths/words/delete.json'
+    put:
+      tags:
+        - words
+      $ref: 'paths/words/update.json'
+
+      
+  

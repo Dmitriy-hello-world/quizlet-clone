@@ -1,0 +1,26 @@
+{
+    "tags": [
+        "modules"
+    ],
+    "summery": "List of modules",
+    "parameters": [
+        {
+            "$ref": "../../components/parameters/jwtToken.json"
+        },
+        {
+            "$ref": "../../components/parameters/limit.json"
+        },
+        {
+            "$ref": "../../components/parameters/order.json"
+        },
+        {
+            "$ref": "../../components/parameters/sortedBy.json"
+        },
+        {
+            "$ref": "../../components/parameters/search.json"
+        },
+        {
+            "$ref": "../../components/parameters/offset.json"
+        }
+    ]
+}

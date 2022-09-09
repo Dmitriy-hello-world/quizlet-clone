@@ -11,10 +11,13 @@ export default class UsersCreate extends Base {
     static validationRules = {
         email           : [ 'required', 'email', { 'max_length': 255 }, 'to_lc' ],
         password        : [ 'required', 'string' ],
-        confirmPassword : [ 'required', { 'equal_to_field': [ 'password' ] } ]
+        confirmPassword : [ 'required', { 'equal_to_field': [ 'password' ] } ],
+        firstName       : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
+        secondName      : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
+        avatar          : [ 'string', { 'min_length': 2 }, { 'max_length': 150 } ]
     };
 
-    async execute({ data }) {
+    async execute(data) {
         try {
             const user = await User.create(data);
 

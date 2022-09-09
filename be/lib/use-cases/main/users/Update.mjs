@@ -9,17 +9,14 @@ import DMX          from '../../../domain-model/X.mjs';
 
 export default class UsersUpdate extends Base {
     static validationRules = {
-        id   : [ 'required', 'uuid' ],
-        data : { 'nested_object' : {
-            firstName  : [ { 'min_length': 2 }, { 'max_length': 50 } ],
-            secondName : [ { 'min_length': 2 }, { 'max_length': 50 } ],
-            avatar     : [ { 'min_length': 2 }, { 'max_length': 150 } ]
-        } }
+        id         : [ 'required', 'uuid' ],
+        firstName  : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
+        secondName : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
+        avatar     : [ 'string', { 'min_length': 2 }, { 'max_length': 150 } ]
     };
 
-    async execute({ id, data }) {
+    async execute({ id, firstName, secondName, avatar }) {
         try {
-            const { firstName, secondName, avatar } = data;
             const { userId } = this.context;
 
             if (id !== userId) {

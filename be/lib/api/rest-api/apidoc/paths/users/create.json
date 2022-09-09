@@ -1,0 +1,15 @@
+{
+    "tags": [
+        "users"
+    ],
+    "summary": "Create user",
+    "requestBody": {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "../../components/schemas/users/create.json"
+                }
+            }
+        }
+    }
+}
