@@ -38,8 +38,8 @@ const initialState: InitialState = {
 
 export const loadUser = createAsyncThunk<returnType, undefined, { extra: { client: axiosType; api: apiType } }>(
   '@@user/load-user',
-  async (_, { extra }) => {
-    return extra.client.get(extra.api.USER_MOCK);
+  async (_, { extra: { client, api } }) => {
+    return client.get(api.USER_MOCK);
   }
 );
 
