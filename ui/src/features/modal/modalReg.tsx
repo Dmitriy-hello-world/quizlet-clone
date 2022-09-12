@@ -5,6 +5,8 @@ import { useForm, Controller } from 'react-hook-form';
 
 import SendIcon from '@mui/icons-material/Send';
 
+import ColorsList from '../../components/Colors';
+
 import AnimalsList from './../../components/Animals';
 
 export type FormValues = {
@@ -28,7 +30,7 @@ const ModalReg: FC = () => {
       })}
     >
       <Box sx={{ display: 'flex' }}>
-        <Box sx={{ marginRight: '30px', maxWidth: 400 }}>
+        <Box sx={{ marginRight: '30px', minWidth: 300, maxWidth: 400 }}>
           <Controller
             control={control}
             name="firstName"
@@ -112,21 +114,8 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="color"
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <label>
-                Avatar color:
-                <Input
-                  sx={{ marginBottom: '20px' }}
-                  type="color"
-                  fullWidth={true}
-                  defaultValue="#094682"
-                  onChange={(e) => {
-                    onChange(e);
-                    setColor(getValues('color'));
-                  }} // send value to hook form
-                  onBlur={onBlur} // notify when input is touched/blur
-                />
-              </label>
+            render={({ field }) => (
+              <ColorsList colorFromState={color} handleSetColor={(c: string) => setColor(c)} field={field} />
             )}
           />
         </Box>

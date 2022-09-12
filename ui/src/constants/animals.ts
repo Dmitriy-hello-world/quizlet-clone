@@ -71,12 +71,4 @@ export const animals: string[] = [
   'wombat',
 ];
 
-export const colors: { [key: string]: string } = {
-  red: '#FF0044',
-  blue: '#006CFE',
-  yellow: '#FFCC41',
-  purple: '#B476FB',
-  orange: '#FE9D24',
-  green: '#29B278',
-  teal: '#00D7BF',
-};
+export const colors: string[] = ['#FF0044', '#006CFE', '#FFCC41', '#B476FB', '#FE9D24', '#29B278', '#00D7BF'];
