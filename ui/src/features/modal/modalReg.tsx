@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 
 import { Box, Input, Button, Stack } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 
 import SendIcon from '@mui/icons-material/Send';
 
@@ -20,7 +21,12 @@ export type FormValues = {
 };
 
 const ModalReg: FC = () => {
-  const { handleSubmit, control, getValues, reset } = useForm<FormValues>();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
   const [color, setColor] = useState<string>('#094682');
 
   return (
@@ -34,9 +40,26 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="firstName"
+            rules={{
+              required: 'Type your Name!',
+              maxLength: {
+                value: 20,
+                message: 'Max 20 letters!',
+              },
+              minLength: {
+                value: 2,
+                message: 'Min 2 letters!',
+              },
+            }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <label>
-                Name:
+                {errors.firstName ? (
+                  <span style={{ color: 'red' }}>
+                    <ErrorMessage errors={errors} name="firstName" />
+                  </span>
+                ) : (
+                  <span>Name:</span>
+                )}
                 <Input
                   sx={{ marginBottom: '20px' }}
                   type="text"
@@ -50,9 +73,26 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="secondName"
+            rules={{
+              required: 'Type your Surname!',
+              maxLength: {
+                value: 20,
+                message: 'Max 20 letters!',
+              },
+              minLength: {
+                value: 2,
+                message: 'Min 2 letters!',
+              },
+            }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <label>
-                Second Name:
+                {errors.secondName ? (
+                  <span style={{ color: 'red' }}>
+                    <ErrorMessage errors={errors} name="secondName" />
+                  </span>
+                ) : (
+                  <span>Second Name:</span>
+                )}
                 <Input
                   sx={{ marginBottom: '20px' }}
                   type="text"
@@ -66,9 +106,22 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="emailInput"
+            rules={{
+              required: 'Type your E-mail!',
+              pattern: {
+                value: /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,
+                message: 'Your email must be like test@test.com',
+              },
+            }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <label>
-                E-mail:
+                {errors.emailInput ? (
+                  <span style={{ color: 'red' }}>
+                    <ErrorMessage errors={errors} name="emailInput" />
+                  </span>
+                ) : (
+                  <span>E-mail:</span>
+                )}
                 <Input
                   sx={{ marginBottom: '20px' }}
                   type="email"
