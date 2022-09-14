@@ -25,9 +25,11 @@ const ModalReg: FC = () => {
     handleSubmit,
     control,
     formState: { errors },
+    getValues,
     reset,
   } = useForm<FormValues>();
   const [color, setColor] = useState<string>('#094682');
+  console.log(getValues('password'));
 
   return (
     <form
@@ -135,9 +137,26 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="password"
+            rules={{
+              required: 'Type your password!',
+              maxLength: {
+                value: 34,
+                message: 'Max 34 letters!',
+              },
+              pattern: {
+                value: /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*][^\s]{9,}/,
+                message: 'Your password must have capital letter, number and 8+ letters',
+              },
+            }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <label>
-                password:
+                {errors.password ? (
+                  <span style={{ color: 'red' }}>
+                    <ErrorMessage errors={errors} name="password" />
+                  </span>
+                ) : (
+                  <span>Password:</span>
+                )}
                 <Input
                   sx={{ marginBottom: '20px' }}
                   type="password"
@@ -151,9 +170,22 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="confirmPassword"
+            rules={{
+              required: 'Confirm your password!',
+              pattern: {
+                value: new RegExp(getValues('password')),
+                message: 'Your passwords must be the same',
+              },
+            }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <label>
-                confirm password:
+                {errors.password ? (
+                  <span style={{ color: 'red' }}>
+                    <ErrorMessage errors={errors} name="confirmPassword" />
+                  </span>
+                ) : (
+                  <span>Confirm password:</span>
+                )}
                 <Input
                   sx={{ marginBottom: '20px' }}
                   type="password"
