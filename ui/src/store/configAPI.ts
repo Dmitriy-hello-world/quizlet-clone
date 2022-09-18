@@ -1,1 +1,1 @@
-export const USER_MOCK = 'http://localhost:3001/user';
+export const BASE_URL = 'http://localhost/';

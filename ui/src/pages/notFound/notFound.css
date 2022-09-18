@@ -1,0 +1,24 @@
+.pageNotFound {
+  background: white;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pageNotFound__text {
+  font-size: 30px;
+  color: black;
+  font-weight: bold;
+}
+
+.pageNotFound__link {
+  text-decoration: none;
+  color: green;
+}
+
+.pageNotFound__link:hover {
+  text-decoration: underline;
+}

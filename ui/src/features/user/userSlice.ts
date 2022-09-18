@@ -39,7 +39,7 @@ const initialState: InitialState = {
 export const loadUser = createAsyncThunk<returnType, undefined, { extra: { client: axiosType; api: apiType } }>(
   '@@user/load-user',
   async (_, { extra: { client, api } }) => {
-    return client.get(api.USER_MOCK);
+    return client.get(api.BASE_URL);
   }
 );
 

@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { Box, FormControlLabel, RadioGroup, Radio } from '@mui/material';
-import { ControllerRenderProps } from 'react-hook-form';
+import { ControllerRenderProps, FieldErrorsImpl } from 'react-hook-form';
+
+import { ErrorMessage } from '@hookform/error-message';
 
 import { FormValues } from '../features/modal/modalReg';
 import { colors } from '../constants/animals';
@@ -9,12 +11,27 @@ interface Props {
   field: ControllerRenderProps<FormValues, 'color'>;
   handleSetColor: (color: string) => void;
   colorFromState: string;
+  errors: FieldErrorsImpl<{
+    firstName: string;
+    secondName: string;
+    emailInput: string;
+    password: string;
+    confirmPassword: string;
+    avatar: string;
+    color: string;
+  }>;
 }
 
-const ColorsList: FC<Props> = ({ field, handleSetColor, colorFromState }) => {
+const ColorsList: FC<Props> = ({ errors, field, handleSetColor, colorFromState }) => {
   return (
     <Box>
-      <div>select avatar color:</div>
+      {errors.color ? (
+        <div style={{ color: 'red' }}>
+          <ErrorMessage errors={errors} name="color" />
+        </div>
+      ) : (
+        <div>select avatar color:</div>
+      )}
       <RadioGroup
         sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }}
         defaultValue=""

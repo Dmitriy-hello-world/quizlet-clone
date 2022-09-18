@@ -1,16 +1,25 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from '../../store/store';
-
+import { RootState, apiType, axiosType } from '../../store/store';
 interface InitialState {
   open: boolean;
   type: 'log' | 'reg';
+  status: 'idle' | 'loading' | 'success' | 'rejected';
 }
 
 const initialState: InitialState = {
   open: false,
   type: 'log',
+  status: 'idle',
 };
+
+export const createUser = createAsyncThunk<string, string, { extra: { client: axiosType; api: apiType } }>(
+  '@@modal/create-user',
+  async (_, { extra: { client, api } }) => {
+    return client.get(api.BASE_URL);
+  }
+);
+
 const modalSlice = createSlice({
   name: '@@modal',
   initialState,
@@ -22,6 +31,12 @@ const modalSlice = createSlice({
     closeModal: (state) => {
       state.open = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createUser.pending, (store, action) => {})
+      .addCase(createUser.rejected, (store, action) => {})
+      .addCase(createUser.fulfilled, (store, { payload }) => {});
   },
 });
 

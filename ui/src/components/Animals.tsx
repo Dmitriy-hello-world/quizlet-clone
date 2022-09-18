@@ -1,6 +1,8 @@
 import { FC, useState } from 'react';
 import { Box, Avatar, FormControlLabel, RadioGroup, Radio } from '@mui/material';
-import { ControllerRenderProps } from 'react-hook-form';
+import { ControllerRenderProps, FieldErrorsImpl } from 'react-hook-form';
+
+import { ErrorMessage } from '@hookform/error-message';
 
 import { animals } from '../constants/animals';
 import { FormValues } from '../features/modal/modalReg';
@@ -8,14 +10,29 @@ import { FormValues } from '../features/modal/modalReg';
 interface Props {
   field: ControllerRenderProps<FormValues, 'avatar'>;
   color: string;
+  errors: FieldErrorsImpl<{
+    firstName: string;
+    secondName: string;
+    emailInput: string;
+    password: string;
+    confirmPassword: string;
+    avatar: string;
+    color: string;
+  }>;
 }
 
-const AnimalsList: FC<Props> = ({ color, field }) => {
+const AnimalsList: FC<Props> = ({ errors, color, field }) => {
   const [selectedName, setSelectedName] = useState<string>('');
 
   return (
     <Box sx={{ width: '400px' }}>
-      <div>select avatar:</div>
+      {errors.avatar ? (
+        <div style={{ color: 'red' }}>
+          <ErrorMessage errors={errors} name="avatar" />
+        </div>
+      ) : (
+        <div>select avatar:</div>
+      )}
       <RadioGroup
         sx={{ display: 'flex', flexWrap: 'wrap', width: '400px', flexDirection: 'row' }}
         defaultValue=""

@@ -5,7 +5,7 @@ import Layout from './layout';
 
 const MainPage = lazy(async () => await import('../pages/mainPage'));
 const PersonalPage = lazy(async () => await import('../pages/personalPage'));
-const NotFoundPage = lazy(async () => await import('../pages/notFoundPage'));
+const NotFoundPage = lazy(async () => await import('../pages/notFound/notFoundPage'));
 
 const RootRouter: FC = () => {
   return (

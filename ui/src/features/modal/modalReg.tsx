@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 
 import { Box, Input, Button, Stack } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
@@ -27,14 +27,31 @@ const ModalReg: FC = () => {
     formState: { errors },
     getValues,
     reset,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    mode: 'onBlur',
+    defaultValues: {
+      firstName: '',
+      secondName: '',
+      emailInput: '',
+      password: '',
+      confirmPassword: '',
+      avatar: '',
+      color: '',
+    },
+  });
   const [color, setColor] = useState<string>('#094682');
-  console.log(getValues('password'));
+  const myForm = useRef<HTMLFormElement | null>(null);
+  const resetForm = () => {
+    reset();
+    myForm.current?.reset();
+  };
 
   return (
     <form
+      ref={myForm}
       onSubmit={handleSubmit((data) => {
         console.log(data);
+        resetForm();
       })}
     >
       <Box sx={{ display: 'flex' }}>
@@ -53,7 +70,7 @@ const ModalReg: FC = () => {
                 message: 'Min 2 letters!',
               },
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <label>
                 {errors.firstName ? (
                   <span style={{ color: 'red' }}>
@@ -62,13 +79,7 @@ const ModalReg: FC = () => {
                 ) : (
                   <span>Name:</span>
                 )}
-                <Input
-                  sx={{ marginBottom: '20px' }}
-                  type="text"
-                  fullWidth={true}
-                  onChange={onChange} // send value to hook form
-                  onBlur={onBlur} // notify when input is touched/blur
-                />
+                <Input sx={{ marginBottom: '20px' }} type="text" fullWidth={true} onChange={onChange} onBlur={onBlur} />
               </label>
             )}
           />
@@ -86,7 +97,7 @@ const ModalReg: FC = () => {
                 message: 'Min 2 letters!',
               },
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <label>
                 {errors.secondName ? (
                   <span style={{ color: 'red' }}>
@@ -95,13 +106,7 @@ const ModalReg: FC = () => {
                 ) : (
                   <span>Second Name:</span>
                 )}
-                <Input
-                  sx={{ marginBottom: '20px' }}
-                  type="text"
-                  fullWidth={true}
-                  onChange={onChange} // send value to hook form
-                  onBlur={onBlur} // notify when input is touched/blur
-                />
+                <Input sx={{ marginBottom: '20px' }} type="text" fullWidth={true} onChange={onChange} onBlur={onBlur} />
               </label>
             )}
           />
@@ -115,7 +120,7 @@ const ModalReg: FC = () => {
                 message: 'Your email must be like test@test.com',
               },
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <label>
                 {errors.emailInput ? (
                   <span style={{ color: 'red' }}>
@@ -128,8 +133,8 @@ const ModalReg: FC = () => {
                   sx={{ marginBottom: '20px' }}
                   type="email"
                   fullWidth={true}
-                  onChange={onChange} // send value to hook form
-                  onBlur={onBlur} // notify when input is touched/blur
+                  onChange={onChange}
+                  onBlur={onBlur}
                 />
               </label>
             )}
@@ -148,7 +153,7 @@ const ModalReg: FC = () => {
                 message: 'Your password must have capital letter, number and 8+ letters',
               },
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <label>
                 {errors.password ? (
                   <span style={{ color: 'red' }}>
@@ -161,8 +166,8 @@ const ModalReg: FC = () => {
                   sx={{ marginBottom: '20px' }}
                   type="password"
                   fullWidth={true}
-                  onChange={onChange} // send value to hook form
-                  onBlur={onBlur} // notify when input is touched/blur
+                  onChange={onChange}
+                  onBlur={onBlur}
                 />
               </label>
             )}
@@ -177,9 +182,9 @@ const ModalReg: FC = () => {
                 message: 'Your passwords must be the same',
               },
             }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <label>
-                {errors.password ? (
+                {errors.confirmPassword ? (
                   <span style={{ color: 'red' }}>
                     <ErrorMessage errors={errors} name="confirmPassword" />
                   </span>
@@ -190,8 +195,8 @@ const ModalReg: FC = () => {
                   sx={{ marginBottom: '20px' }}
                   type="password"
                   fullWidth={true}
-                  onChange={onChange} // send value to hook form
-                  onBlur={onBlur} // notify when input is touched/blur
+                  onChange={onChange}
+                  onBlur={onBlur}
                 />
               </label>
             )}
@@ -199,23 +204,33 @@ const ModalReg: FC = () => {
           <Controller
             control={control}
             name="color"
+            rules={{
+              required: 'Select your color!',
+            }}
             render={({ field }) => (
-              <ColorsList colorFromState={color} handleSetColor={(c: string) => setColor(c)} field={field} />
+              <ColorsList
+                errors={errors}
+                colorFromState={color}
+                handleSetColor={(c: string) => setColor(c)}
+                field={field}
+              />
             )}
           />
         </Box>
         <Controller
           control={control}
           name="avatar"
-          render={({ field }) => <AnimalsList color={color} field={field} />}
+          rules={{
+            required: 'Select your avatar!',
+          }}
+          render={({ field }) => <AnimalsList errors={errors} color={color} field={field} />}
         />
       </Box>
       <Stack direction="row" textAlign="center" spacing={2}>
         <Button
-          type="reset"
           variant="outlined"
           onClick={() => {
-            reset();
+            resetForm();
           }}
         >
           Reset
