@@ -6,14 +6,18 @@ import { ErrorMessage } from '@hookform/error-message';
 
 import SendIcon from '@mui/icons-material/Send';
 
+import { useAppDispatch } from '../../store/store';
+
 import ColorsList from '../../components/Colors';
 
-import AnimalsList from './../../components/Animals';
+import AnimalsList from '../../components/Animals';
+
+import { createUser } from './formSlice';
 
 export type FormValues = {
   firstName: string;
   secondName: string;
-  emailInput: string;
+  email: string;
   password: string;
   confirmPassword: string;
   avatar: string;
@@ -32,7 +36,7 @@ const ModalReg: FC = () => {
     defaultValues: {
       firstName: '',
       secondName: '',
-      emailInput: '',
+      email: '',
       password: '',
       confirmPassword: '',
       avatar: '',
@@ -45,12 +49,13 @@ const ModalReg: FC = () => {
     reset();
     myForm.current?.reset();
   };
+  const dispatch = useAppDispatch();
 
   return (
     <form
       ref={myForm}
       onSubmit={handleSubmit((data) => {
-        console.log(data);
+        dispatch(createUser(data));
         resetForm();
       })}
     >
@@ -112,19 +117,19 @@ const ModalReg: FC = () => {
           />
           <Controller
             control={control}
-            name="emailInput"
+            name="email"
             rules={{
               required: 'Type your E-mail!',
               pattern: {
-                value: /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,
+                value: /^([A-Za-z0-9_-]+\.)*[A-Za-z0-9_-]+@[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*\.[A-Za-z]{2,6}$/,
                 message: 'Your email must be like test@test.com',
               },
             }}
             render={({ field: { onChange, onBlur } }) => (
               <label>
-                {errors.emailInput ? (
+                {errors.email ? (
                   <span style={{ color: 'red' }}>
-                    <ErrorMessage errors={errors} name="emailInput" />
+                    <ErrorMessage errors={errors} name="email" />
                   </span>
                 ) : (
                   <span>E-mail:</span>

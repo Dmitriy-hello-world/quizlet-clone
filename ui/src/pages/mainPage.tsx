@@ -1,9 +1,7 @@
 import { FC } from 'react';
 
-import { ReactComponent as Spinner } from '../assets/svg/spinner.svg';
-
 const MainPage: FC = () => {
-  return <Spinner />;
+  return <div>main Page</div>;
 };
 
 export default MainPage;

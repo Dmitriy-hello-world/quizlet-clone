@@ -5,7 +5,7 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 import { useAppDispatch } from '../../store/store';
-import { openModal } from '../modal/modalSlice';
+import { openModal } from '../form/formSlice';
 
 import { loadUser, getUserInfoSelector } from './userSlice';
 

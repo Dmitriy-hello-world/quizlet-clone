@@ -3,14 +3,14 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 import { userReducer } from '../features/user/userSlice';
-import { modalReducer } from '../features/modal/modalSlice';
+import { formReducer } from '../features/form/formSlice';
 
 import * as api from './configAPI';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    modal: modalReducer,
+    form: formReducer,
   },
   devTools: true,
   middleware: (setDefaultMiddleware) =>
@@ -20,8 +20,8 @@ export const store = configureStore({
           client: axios,
           api,
         },
-        serializableCheck: false,
       },
+      serializableCheck: false,
     }),
 });
 

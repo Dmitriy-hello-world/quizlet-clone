@@ -5,7 +5,7 @@ import { ControllerRenderProps, FieldErrorsImpl } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
 import { animals } from '../constants/animals';
-import { FormValues } from '../features/modal/modalReg';
+import { FormValues } from '../features/form/formReg';
 
 interface Props {
   field: ControllerRenderProps<FormValues, 'avatar'>;

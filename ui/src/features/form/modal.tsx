@@ -4,9 +4,14 @@ import { useSelector } from 'react-redux';
 
 import { useAppDispatch } from '../../store/store';
 
-import { closeModal, modalInfo } from './modalSlice';
-import ModalLogIn from './modalLog';
-import ModalReg from './modalReg';
+import { ReactComponent as Spinner } from '../../assets/svg/spinner.svg';
+import { ReactComponent as Check } from '../../assets/svg/check.svg';
+import { ReactComponent as Failed } from '../../assets/svg/cancel.svg';
+
+import { closeModal, modalInfo } from './formSlice';
+import ModalLogIn from './formLog';
+import ModalReg from './formReg';
+import { useResetStatus } from './useResetStatus';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -20,12 +25,15 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: 5,
+  textAlign: 'center',
 };
 
 const BasicModal: FC = () => {
   const dispatch = useAppDispatch();
-  const { open, type } = useSelector(modalInfo);
+  const { open, type, status } = useSelector(modalInfo);
   const handleClose = () => dispatch(closeModal());
+
+  useResetStatus(status);
 
   return (
     <div>
@@ -35,7 +43,12 @@ const BasicModal: FC = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>{type === 'log' ? <ModalLogIn /> : <ModalReg />}</Box>
+        <Box sx={style}>
+          {status === 'loading' ? <Spinner /> : null}
+          {status === 'success' ? <Check /> : null}
+          {status === 'rejected' ? <Failed /> : null}
+          {status === 'idle' ? type === 'log' ? <ModalLogIn /> : <ModalReg /> : null}
+        </Box>
       </Modal>
     </div>
   );

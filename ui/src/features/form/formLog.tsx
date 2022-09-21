@@ -4,8 +4,12 @@ import { FC, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import SendIcon from '@mui/icons-material/Send';
 
-type FormValues = {
-  emailInput: string;
+import { useAppDispatch } from '../../store/store';
+
+import { startSession } from './formSlice';
+
+export type LogFormValues = {
+  email: string;
   password: string;
 };
 
@@ -15,9 +19,9 @@ const ModalLogIn: FC = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<LogFormValues>({
     defaultValues: {
-      emailInput: '',
+      email: '',
       password: '',
     },
   });
@@ -26,19 +30,21 @@ const ModalLogIn: FC = () => {
     reset();
     myForm.current?.reset();
   };
+  const dispatch = useAppDispatch();
 
   return (
     <form
       ref={myForm}
       onSubmit={handleSubmit((data) => {
-        console.log(data);
+        console.log({ data });
+        dispatch(startSession({ data }));
         resetForm();
       })}
     >
       <Box sx={{ marginRight: '30px', minWidth: 300, maxWidth: 400 }}>
         <Controller
           control={control}
-          name="emailInput"
+          name="email"
           rules={{
             required: 'Type your E-mail!',
             pattern: {
@@ -48,9 +54,9 @@ const ModalLogIn: FC = () => {
           }}
           render={({ field: { onChange, onBlur } }) => (
             <label>
-              {errors.emailInput ? (
+              {errors.email ? (
                 <span style={{ color: 'red' }}>
-                  <ErrorMessage errors={errors} name="emailInput" />
+                  <ErrorMessage errors={errors} name="email" />
                 </span>
               ) : (
                 <span>E-mail:</span>

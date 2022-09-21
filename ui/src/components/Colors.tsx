@@ -4,7 +4,7 @@ import { ControllerRenderProps, FieldErrorsImpl } from 'react-hook-form';
 
 import { ErrorMessage } from '@hookform/error-message';
 
-import { FormValues } from '../features/modal/modalReg';
+import { FormValues } from '../features/form/formReg';
 import { colors } from '../constants/animals';
 
 interface Props {
