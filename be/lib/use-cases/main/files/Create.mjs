@@ -2,7 +2,7 @@
 import path               from 'path';
 import uuid               from 'uuid';
 import Base               from '../../Base.mjs';
-import s3, { BucketName } from '../../../infrastructure/s3.mjs';
+import minioClient, { BucketName } from '../../../infrastructure/minio.mjs';
 import {
     Exception as X
 } from '../../../../packages.mjs';
@@ -34,19 +34,19 @@ export default class FileCreate extends Base {
     async execute({ type, file, filename, mimetype }) {
         const extention      = path.extname(filename);
         const remoteFileName = `${uuid.v4()}${extention}`;
-        const params = {
-            Bucket      : BucketName,
-            Key         : `${type}/${remoteFileName}`,
-            Body        : file,
-            ContentType : mimetype
-        };
 
         try {
-            const data = await s3.uploadAsync(params);
+            await minioClient.uploadAsync(
+                BucketName,
+                `${type}/${remoteFileName}`,
+                file,
+                { ContentType: mimetype }
+            );
+
             const storedFile = ({
                 name         : remoteFileName,
                 originalName : filename,
-                key          : data.Key,
+                key          : `/${BucketName}/${type}/${remoteFileName}`,
                 location     : BucketName,
                 extention,
                 type
@@ -55,7 +55,7 @@ export default class FileCreate extends Base {
             return { data: storedFile };
         } catch (error) {
             throw new X({
-                code   : 'FAILED_TO_DOWNLOAD',
+                code   : error,
                 fields : {
                     file : 'BAD_FILE'
                 }

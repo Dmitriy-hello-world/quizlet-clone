@@ -6,6 +6,7 @@ import UsersResetPassword from '../../../../use-cases/main/users/ResetPassword.m
 import UsersList          from '../../../../use-cases/main/users/List.mjs';
 import UsersShow          from '../../../../use-cases/main/users/Show.mjs';
 import UsersDelete        from '../../../../use-cases/main/users/Delete.mjs';
+import UsersProfile       from '../../../../use-cases/main/users/Profile.js';
 
 export default {
     create        : chista.makeUseCaseRunner(UsersCreate, req => req.body),
@@ -13,5 +14,6 @@ export default {
     resetPassword : chista.makeUseCaseRunner(UsersResetPassword, req => req.body),
     list          : chista.makeUseCaseRunner(UsersList, req => ({ ...req.query, ...req.params })),
     show          : chista.makeUseCaseRunner(UsersShow, req  => ({ id: req.params.id })),
+    profile       : chista.makeUseCaseRunner(UsersProfile, req => ({ ...req.params })),
     delete        : chista.makeUseCaseRunner(UsersDelete, req => ({ ...req.body, id: req.params.id }))
 };

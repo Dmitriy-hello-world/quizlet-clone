@@ -7,11 +7,13 @@
     "testStaticPath": "{{TEST_STATIC_PATH}}",
     "postImagesMaxSize": 4000000,
     "imagesPath"       : "{{IMAGES_PATH}}",
-    "s3": {
-        "accessKeyId": "{{S3_ACCESS_KEY_ID}}",
-        "secretAccessKey": "{{S3_SECRET_ACCESS_KEY}}",
-        "bucket": "{{S3_BUCKET}}",
-        "endpoint": "{{S3_ENDPOINT}}"
+    "minio": {
+        "accessKey": "{{MINIO_ACCESS_KEY_ID}}",
+        "secretKey": "{{MINIO_SECRET_ACCESS_KEY}}",
+        "bucket": "{{MINIO_BUCKET}}",
+        "endPoint": "{{MINIO_ENDPOINT}}",
+        "useSSL": false,
+        "port": "{{MINIO_PORT}}"
     },
     "mail": {
         "from": "{{MAIL_FROM}}",

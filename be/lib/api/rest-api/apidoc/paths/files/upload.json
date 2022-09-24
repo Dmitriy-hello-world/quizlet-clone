@@ -1,0 +1,24 @@
+{
+    "tags": [
+        "files"
+    ],
+    "summary": "Upload file",
+    "parameters": [
+        {
+            "$ref": "../../components/parameters/jwtToken.json"
+        },
+        {
+            "$ref": "../../components/parameters/type.json"
+        }
+    ],
+    "requestBody": {
+        "content": {
+            "multipart/form-data": {
+                "schema": {
+                    "type": "string",
+                    "format": "binary"
+                }
+            }
+        }
+    }
+}

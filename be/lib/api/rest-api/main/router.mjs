@@ -7,10 +7,11 @@ export default async (router) => {
     router.register(async (secureRouter) => {
         secureRouter.addHook('preHandler', checkSession);
 
-        secureRouter.get('/:id',    controllers.users.show);
-        secureRouter.get('/',       controllers.users.list);
-        secureRouter.put('/:id',    controllers.users.update);
-        secureRouter.delete('/:id', controllers.users.delete);
+        secureRouter.get('/:id',     controllers.users.show);
+        secureRouter.get('/profile', controllers.users.profile);
+        secureRouter.get('/',        controllers.users.list);
+        secureRouter.put('/:id',     controllers.users.update);
+        secureRouter.delete('/:id',  controllers.users.delete);
     }, { prefix: '/users' });
 
     // Words

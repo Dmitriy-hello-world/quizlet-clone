@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "properties": {
+        "data": {
+            "$ref": "../schemas/users/profile.json"
+        },
+        "status": {
+            "type": "number",
+            "example": 1
+        }
+    }
+}
