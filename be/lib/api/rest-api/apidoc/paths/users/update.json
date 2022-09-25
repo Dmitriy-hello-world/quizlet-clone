@@ -19,5 +19,16 @@
                 }
             }
         }
+    },
+    "responses": {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "../../components/responses/userShow.json"
+                    }
+                }
+            }
+        }
     }
 }

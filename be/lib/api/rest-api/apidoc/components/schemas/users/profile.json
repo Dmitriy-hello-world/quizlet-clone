@@ -1,0 +1,38 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "example": "e1cf6096-a5d5-43b1-b940-14ef22401661"
+        },
+        "email": {
+            "type": "string",
+            "example": "test@gmail.com"
+        },
+        "firstName": {
+            "type": "string",
+            "example": "test"
+        },
+        "secondName": {
+            "type": "string",
+            "example": "test2"
+        },
+        "avatarUrl": {
+            "type": "string"
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "$ref": "../modules/show.json"
+            }
+        },
+        "createdAt": {
+            "type": "string",
+            "example": "2022-09-04T18:41:50.000Z"
+        },
+        "updatedAt": {
+            "type": "string",
+            "example": "2022-09-04T18:41:50.000Z"
+        }
+    }
+}

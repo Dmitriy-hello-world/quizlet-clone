@@ -22,5 +22,16 @@
         {
             "$ref": "../../components/parameters/offset.json"
         }
-    ]
+    ],
+    "responses": {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "../../components/responses/users.json"
+                    }
+                }
+            }
+        }
+    }
 }
