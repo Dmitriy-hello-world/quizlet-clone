@@ -10,5 +10,22 @@
         {
             "$ref": "../../components/parameters/id.json"
         }
-    ]
+    ],
+    "responses": {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "number",
+                                "example": 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

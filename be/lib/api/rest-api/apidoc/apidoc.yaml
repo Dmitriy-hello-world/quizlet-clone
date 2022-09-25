@@ -17,6 +17,8 @@ tags:
     description: modules API
   - name: words
     description: words API
+  - name: files
+    description: files API
 
 security:
   - basicAuth: []
@@ -27,6 +29,11 @@ paths:
       tags:
         - sessions
       $ref: 'paths/sessions/create.json'
+  /users/profile:
+    get:
+      tags:
+        - users
+      $ref: 'paths/users/profile.json'
   /users:
     post:
       tags:
@@ -85,6 +92,11 @@ paths:
       tags:
         - words
       $ref: 'paths/words/update.json'
+  /files/{type}:
+    post:
+      tags:
+        - files
+      $ref: 'paths/files/upload.json'
 
       
   

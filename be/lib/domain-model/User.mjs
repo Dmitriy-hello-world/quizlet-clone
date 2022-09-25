@@ -27,7 +27,7 @@ class User extends Base {
     };
 
     static initRelations() {
-        this.hasMany(Module, { foreignKey: 'userId', onDelete: 'CASCADE' });
+        this.hasMany(Module, { foreignKey: 'userId', onDelete: 'CASCADE', as: 'modules' });
     }
 
     /**

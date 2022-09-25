@@ -1,0 +1,10 @@
+{
+    "name": "type",
+    "in": "path",
+    "description": "Type of file",
+    "schema": {
+        "type": "string",
+        "enum": ["images", "chat"]
+    },
+    "required": true
+}
