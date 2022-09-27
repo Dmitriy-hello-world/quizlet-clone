@@ -2,9 +2,18 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState, apiType, axiosType } from '../../store/store';
 
+import { loadUserInfo } from '../user/userSlice';
+
 import { FormValues } from './formReg';
 
 import { LogFormValues } from './formLog';
+
+interface SessionsResp {
+  status: 1 | 0;
+  data: {
+    jwt: string;
+  };
+}
 
 interface InitialState {
   open: boolean;
@@ -12,7 +21,7 @@ interface InitialState {
   status: 'idle' | 'loading' | 'success' | 'rejected';
 }
 
-type StartSessionBody = {
+type SessionBody = {
   data: LogFormValues;
 };
 
@@ -29,10 +38,22 @@ export const createUser = createAsyncThunk<string, FormValues, { extra: { client
   }
 );
 
-export const startSession = createAsyncThunk<string, StartSessionBody, { extra: { client: axiosType; api: apiType } }>(
+export const startSession = createAsyncThunk<SessionsResp, SessionBody, { extra: { client: axiosType; api: apiType } }>(
   '@@form/start-session',
-  async (createUserBody, { extra: { client, api } }) => {
-    return client.post(api.START_SESSION, createUserBody);
+  async (createUserBody, { rejectWithValue, dispatch, extra: { client, api } }) => {
+    try {
+      const response: SessionsResp = await client.post(api.START_SESSION, createUserBody);
+
+      if (response.status === 0) {
+        throw new Error('Server Error!');
+      }
+
+      dispatch(loadUserInfo(response.data.jwt));
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
@@ -55,12 +76,15 @@ const formSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createUser.pending, (store) => {
+        console.log('loading');
         store.status = 'loading';
       })
       .addCase(createUser.rejected, (store) => {
+        console.log('reject');
         store.status = 'rejected';
       })
       .addCase(createUser.fulfilled, (store, { payload }) => {
+        console.log('succes', payload);
         store.status = 'success';
       })
       .addCase(startSession.pending, (store) => {

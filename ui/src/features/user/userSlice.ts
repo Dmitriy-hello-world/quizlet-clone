@@ -11,12 +11,22 @@ interface InitialState {
     avatarUrl: null | string;
     createdAt: null | string;
     updatedAt: null | string;
-    userToken?: null | string;
   };
   status: 'idle' | 'loading' | 'rejected' | 'received';
-  error: null | string;
 }
 
+interface userInfoResp {
+  data: {
+    id: string;
+    email: string;
+    firstName: string;
+    secondName: string;
+    avatarUrl: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  status: 1 | 0;
+}
 interface returnType {
   data: typeof initialState.user;
 }
@@ -30,16 +40,29 @@ const initialState: InitialState = {
     avatarUrl: null,
     createdAt: null,
     updatedAt: null,
-    userToken: null,
   },
   status: 'idle',
-  error: null,
 };
 
-export const loadUser = createAsyncThunk<returnType, undefined, { extra: { client: axiosType; api: apiType } }>(
-  '@@user/load-user',
-  async (_, { extra: { client, api } }) => {
-    return client.get(api.BASE_URL);
+export const loadUserInfo = createAsyncThunk<userInfoResp, string, { extra: { client: axiosType; api: apiType } }>(
+  '@@form/create-user',
+  async (token, { rejectWithValue, extra: { client, api } }) => {
+    try {
+      const response: userInfoResp = await client.post(api.GET_USER_INFO, {
+        Headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 0) {
+        throw new Error('incorrect token!');
+      }
+
+      localStorage.setItem('token', token);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
@@ -49,15 +72,13 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadUser.pending, (store) => {
+      .addCase(loadUserInfo.pending, (store) => {
         store.status = 'loading';
-        store.error = null;
       })
-      .addCase(loadUser.rejected, (store) => {
+      .addCase(loadUserInfo.rejected, (store) => {
         store.status = 'rejected';
-        store.error = 'Ops, something went wrong!';
       })
-      .addCase(loadUser.fulfilled, (store, action) => {
+      .addCase(loadUserInfo.fulfilled, (store, action) => {
         store.status = 'received';
         store.user = action.payload.data;
       });
