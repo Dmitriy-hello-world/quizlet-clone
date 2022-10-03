@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useRef } from 'react';
 
 import { Box, Input, Button, Stack } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,10 +8,6 @@ import SendIcon from '@mui/icons-material/Send';
 
 import { useAppDispatch } from '../../store/store';
 
-import ColorsList from '../../components/Colors';
-
-import AnimalsList from '../../components/Animals';
-
 import { createUser } from './formSlice';
 
 export type FormValues = {
@@ -20,8 +16,6 @@ export type FormValues = {
   email: string;
   password: string;
   confirmPassword: string;
-  avatar: string;
-  color: string;
 };
 
 const ModalReg: FC = () => {
@@ -39,11 +33,8 @@ const ModalReg: FC = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      avatar: '',
-      color: '',
     },
   });
-  const [color, setColor] = useState<string>('#094682');
   const myForm = useRef<HTMLFormElement | null>(null);
   const resetForm = () => {
     reset();
@@ -206,30 +197,7 @@ const ModalReg: FC = () => {
               </label>
             )}
           />
-          <Controller
-            control={control}
-            name="color"
-            rules={{
-              required: 'Select your color!',
-            }}
-            render={({ field }) => (
-              <ColorsList
-                errors={errors}
-                colorFromState={color}
-                handleSetColor={(c: string) => setColor(c)}
-                field={field}
-              />
-            )}
-          />
         </Box>
-        <Controller
-          control={control}
-          name="avatar"
-          rules={{
-            required: 'Select your avatar!',
-          }}
-          render={({ field }) => <AnimalsList errors={errors} color={color} field={field} />}
-        />
       </Box>
       <Stack direction="row" textAlign="center" spacing={2}>
         <Button

@@ -11,7 +11,6 @@ import { ReactComponent as Failed } from '../../assets/svg/cancel.svg';
 import { closeModal, modalInfo } from './formSlice';
 import ModalLogIn from './formLog';
 import ModalReg from './formReg';
-import { useResetStatus } from './useResetStatus';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -32,8 +31,6 @@ const BasicModal: FC = () => {
   const dispatch = useAppDispatch();
   const { open, type, status } = useSelector(modalInfo);
   const handleClose = () => dispatch(closeModal());
-
-  useResetStatus(status);
 
   return (
     <div>

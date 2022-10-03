@@ -7,7 +7,7 @@ import Logout from '@mui/icons-material/Logout';
 import { useAppDispatch } from '../../store/store';
 import { openModal } from '../form/formSlice';
 
-import { loadUser, getUserInfoSelector } from './userSlice';
+import { getUserInfoSelector, loadUserInfo } from './userSlice';
 
 const AccountInHeader: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -19,15 +19,13 @@ const AccountInHeader: FC = () => {
     setAnchorEl(null);
   };
   const dispatch = useAppDispatch();
-  const { user, status, error } = useSelector(getUserInfoSelector);
-  const callUseEffectOnce = useRef(true);
-  const isAuthorized = false;
+  const { user, isAuthorized } = useSelector(getUserInfoSelector);
   const handleOpenModal = (type: 'log' | 'reg') => dispatch(openModal(type));
 
   useEffect(() => {
-    if (callUseEffectOnce.current) {
-      callUseEffectOnce.current = false;
-      dispatch(loadUser());
+    const token = localStorage.getItem('token');
+    if (token && token !== null) {
+      dispatch(loadUserInfo(token));
     }
   }, [dispatch]);
 
@@ -35,9 +33,7 @@ const AccountInHeader: FC = () => {
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         {user.firstName !== null && isAuthorized ? (
-          <Typography onClick={handleClick} sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
-            {user.firstName}
-          </Typography>
+          <Typography sx={{ minWidth: 100, m: '0 5px' }}>{user.firstName}</Typography>
         ) : (
           <Typography onClick={() => handleOpenModal('log')} sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
             Log In

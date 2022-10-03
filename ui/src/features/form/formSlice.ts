@@ -11,10 +11,24 @@ import { LogFormValues } from './formLog';
 interface SessionsResp {
   status: 1 | 0;
   data: {
-    jwt: string;
+    data: {
+      jwt: string;
+    };
   };
 }
 
+interface CreateUserResp {
+  data: {
+    id: string;
+    email: string;
+    firstName: string;
+    secondName: string;
+    avatarUrl: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  status: 1 | 0;
+}
 interface InitialState {
   open: boolean;
   type: 'log' | 'reg';
@@ -31,10 +45,26 @@ const initialState: InitialState = {
   status: 'idle',
 };
 
-export const createUser = createAsyncThunk<string, FormValues, { extra: { client: axiosType; api: apiType } }>(
+export const createUser = createAsyncThunk<CreateUserResp, FormValues, { extra: { client: axiosType; api: apiType } }>(
   '@@form/create-user',
-  async (createUserBody, { extra: { client, api } }) => {
-    return client.post(api.CREATE_USER, createUserBody);
+  async (createUserBody, { rejectWithValue, dispatch, extra: { client, api } }) => {
+    try {
+      const response: CreateUserResp = await client.post(api.CREATE_USER, createUserBody);
+
+      if (response.status === 0) {
+        throw new Error('Server Error!');
+      }
+
+      setTimeout(() => {
+        dispatch(resetStatus());
+        dispatch(openModal('log'));
+      }, 500);
+
+      return response;
+    } catch (error) {
+      dispatch(resetStatus());
+      return rejectWithValue(error);
+    }
   }
 );
 
@@ -44,11 +74,15 @@ export const startSession = createAsyncThunk<SessionsResp, SessionBody, { extra:
     try {
       const response: SessionsResp = await client.post(api.START_SESSION, createUserBody);
 
+      setTimeout(() => {
+        dispatch(resetStatus());
+      }, 1000);
+
       if (response.status === 0) {
         throw new Error('Server Error!');
       }
 
-      dispatch(loadUserInfo(response.data.jwt));
+      dispatch(loadUserInfo(response.data.data.jwt));
 
       return response;
     } catch (error) {
@@ -76,15 +110,12 @@ const formSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createUser.pending, (store) => {
-        console.log('loading');
         store.status = 'loading';
       })
       .addCase(createUser.rejected, (store) => {
-        console.log('reject');
         store.status = 'rejected';
       })
-      .addCase(createUser.fulfilled, (store, { payload }) => {
-        console.log('succes', payload);
+      .addCase(createUser.fulfilled, (store) => {
         store.status = 'success';
       })
       .addCase(startSession.pending, (store) => {
@@ -93,8 +124,7 @@ const formSlice = createSlice({
       .addCase(startSession.rejected, (store) => {
         store.status = 'rejected';
       })
-      .addCase(startSession.fulfilled, (store, { payload }) => {
-        console.log(payload);
+      .addCase(startSession.fulfilled, (store) => {
         store.status = 'success';
       });
   },

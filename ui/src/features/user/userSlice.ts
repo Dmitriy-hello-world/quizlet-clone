@@ -13,22 +13,22 @@ interface InitialState {
     updatedAt: null | string;
   };
   status: 'idle' | 'loading' | 'rejected' | 'received';
+  isAuthorized: boolean;
 }
 
 interface userInfoResp {
   data: {
-    id: string;
-    email: string;
-    firstName: string;
-    secondName: string;
-    avatarUrl: string;
-    createdAt: string;
-    updatedAt: string;
+    data: {
+      id: string;
+      email: string;
+      firstName: string;
+      secondName: string;
+      avatarUrl: string;
+      createdAt: string;
+      updatedAt: string;
+    };
   };
   status: 1 | 0;
-}
-interface returnType {
-  data: typeof initialState.user;
 }
 
 const initialState: InitialState = {
@@ -42,14 +42,15 @@ const initialState: InitialState = {
     updatedAt: null,
   },
   status: 'idle',
+  isAuthorized: false,
 };
 
 export const loadUserInfo = createAsyncThunk<userInfoResp, string, { extra: { client: axiosType; api: apiType } }>(
-  '@@form/create-user',
+  '@@user/load-user-info',
   async (token, { rejectWithValue, extra: { client, api } }) => {
     try {
-      const response: userInfoResp = await client.post(api.GET_USER_INFO, {
-        Headers: {
+      const response: userInfoResp = await client.get(api.GET_USER_INFO, {
+        headers: {
           Authorization: token,
         },
       });
@@ -61,6 +62,7 @@ export const loadUserInfo = createAsyncThunk<userInfoResp, string, { extra: { cl
       localStorage.setItem('token', token);
       return response;
     } catch (error) {
+      localStorage.removeItem('token');
       return rejectWithValue(error);
     }
   }
@@ -80,11 +82,15 @@ const userSlice = createSlice({
       })
       .addCase(loadUserInfo.fulfilled, (store, action) => {
         store.status = 'received';
-        store.user = action.payload.data;
+        store.user = action.payload.data.data;
+        store.isAuthorized = true;
       });
   },
 });
 
 export const userReducer = userSlice.reducer;
 
-export const getUserInfoSelector = (state: RootState) => state.user;
+export const getUserInfoSelector = (state: RootState) => ({
+  user: state.user.user,
+  isAuthorized: state.user.isAuthorized,
+});
