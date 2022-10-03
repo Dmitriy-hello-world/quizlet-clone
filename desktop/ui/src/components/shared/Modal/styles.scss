@@ -1,0 +1,30 @@
+.FieldsBox {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    .TextField {
+        margin-bottom: 15px;
+    }
+}
+
+.HeaderBox {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+
+   .modalTitle {
+    margin-right: 30px;
+   }
+
+   .headerButtons {
+    * {
+        border-radius: 0 !important;
+    }
+   }
+}
+
+.sendButton {
+    border-radius: 0 !important;
+}
