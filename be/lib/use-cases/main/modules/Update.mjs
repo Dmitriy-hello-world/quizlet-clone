@@ -16,7 +16,7 @@ export default class ModulesUpdate extends Base {
         editedByOutsiders : [ 'boolean' ]
     };
 
-    async execute({ id, data }) {
+    async execute({ id, ...data }) {
         try {
             const { userId } = this.context;
 
