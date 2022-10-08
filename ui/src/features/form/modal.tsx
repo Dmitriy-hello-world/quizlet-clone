@@ -11,6 +11,7 @@ import { ReactComponent as Failed } from '../../assets/svg/cancel.svg';
 import { closeModal, modalInfo } from './formSlice';
 import ModalLogIn from './formLog';
 import ModalReg from './formReg';
+import CreateModuleForm from './createModuleForm';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,7 +45,9 @@ const BasicModal: FC = () => {
           {status === 'loading' ? <Spinner /> : null}
           {status === 'success' ? <Check /> : null}
           {status === 'rejected' ? <Failed /> : null}
-          {status === 'idle' ? type === 'log' ? <ModalLogIn /> : <ModalReg /> : null}
+          {status === 'idle' && type === 'log' ? <ModalLogIn /> : null}
+          {status === 'idle' && type === 'reg' ? <ModalReg /> : null}
+          {status === 'idle' && type === 'mod' ? <CreateModuleForm /> : null}
         </Box>
       </Modal>
     </div>

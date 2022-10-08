@@ -7,7 +7,9 @@ import Logout from '@mui/icons-material/Logout';
 import { useAppDispatch } from '../../store/store';
 import { openModal } from '../form/formSlice';
 
-import { getUserInfoSelector, loadUserInfo } from './userSlice';
+import { getToken } from '../../utils/functions';
+
+import { getUserInfoSelector, loadUserInfo, logOutUser } from './userSlice';
 
 const AccountInHeader: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -23,7 +25,7 @@ const AccountInHeader: FC = () => {
   const handleOpenModal = (type: 'log' | 'reg') => dispatch(openModal(type));
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (token && token !== null) {
       dispatch(loadUserInfo(token));
     }
@@ -104,7 +106,13 @@ const AccountInHeader: FC = () => {
                 </ListItemIcon>
                 Settings
               </MenuItem>,
-              <MenuItem key="3">
+              <MenuItem
+                key="3"
+                onClick={() => {
+                  dispatch(logOutUser());
+                  localStorage.removeItem('token');
+                }}
+              >
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>

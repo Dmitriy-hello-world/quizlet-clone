@@ -36,7 +36,6 @@ const ModalLogIn: FC = () => {
     <form
       ref={myForm}
       onSubmit={handleSubmit((data) => {
-        console.log({ data });
         dispatch(startSession({ data }));
         resetForm();
       })}

@@ -3,14 +3,15 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, apiType, axiosType } from '../../store/store';
 
 import { loadUserInfo } from '../user/userSlice';
+import { loadModules, userModuleResp } from '../modules/modulesSlice';
 
 import { FormValues } from './formReg';
 
 import { LogFormValues } from './formLog';
 
 interface SessionsResp {
-  status: 1 | 0;
   data: {
+    status: 1 | 0;
     data: {
       jwt: string;
     };
@@ -19,20 +20,28 @@ interface SessionsResp {
 
 interface CreateUserResp {
   data: {
-    id: string;
-    email: string;
-    firstName: string;
-    secondName: string;
-    avatarUrl: string;
-    createdAt: string;
-    updatedAt: string;
+    date: {
+      id: string;
+      email: string;
+      firstName: string;
+      secondName: string;
+      avatarUrl: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+    status: 1 | 0;
   };
-  status: 1 | 0;
 }
 interface InitialState {
   open: boolean;
-  type: 'log' | 'reg';
+  type: 'log' | 'reg' | 'mod';
   status: 'idle' | 'loading' | 'success' | 'rejected';
+}
+
+interface modulePrm {
+  token: string;
+  name: string;
+  description: string;
 }
 
 type SessionBody = {
@@ -50,8 +59,7 @@ export const createUser = createAsyncThunk<CreateUserResp, FormValues, { extra: 
   async (createUserBody, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: CreateUserResp = await client.post(api.CREATE_USER, createUserBody);
-
-      if (response.status === 0) {
+      if (response.data.status === 0) {
         throw new Error('Server Error!');
       }
 
@@ -73,12 +81,11 @@ export const startSession = createAsyncThunk<SessionsResp, SessionBody, { extra:
   async (createUserBody, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: SessionsResp = await client.post(api.START_SESSION, createUserBody);
-
       setTimeout(() => {
         dispatch(resetStatus());
       }, 1000);
 
-      if (response.status === 0) {
+      if (response.data.status === 0) {
         throw new Error('Server Error!');
       }
 
@@ -91,11 +98,47 @@ export const startSession = createAsyncThunk<SessionsResp, SessionBody, { extra:
   }
 );
 
+export const createModule = createAsyncThunk<userModuleResp, modulePrm, { extra: { client: axiosType; api: apiType } }>(
+  '@@form/load-modules',
+  async ({ token, name, description }, { rejectWithValue, dispatch, extra: { client, api } }) => {
+    try {
+      const response: userModuleResp = await client.post(
+        api.CREATE_MODULE,
+        {
+          name,
+          description,
+          private: true,
+          editedByOutsiders: true,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      setTimeout(() => {
+        dispatch(resetStatus());
+      }, 1000);
+
+      if (response.data.status === 0) {
+        throw new Error('something went wrong!');
+      } else {
+        dispatch(loadModules(token));
+      }
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const formSlice = createSlice({
   name: '@@form',
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<'log' | 'reg'>) => {
+    openModal: (state, action: PayloadAction<'log' | 'reg' | 'mod'>) => {
       state.open = true;
       state.type = action.payload;
     },
@@ -125,6 +168,15 @@ const formSlice = createSlice({
         store.status = 'rejected';
       })
       .addCase(startSession.fulfilled, (store) => {
+        store.status = 'success';
+      })
+      .addCase(createModule.pending, (store) => {
+        store.status = 'loading';
+      })
+      .addCase(createModule.rejected, (store) => {
+        store.status = 'rejected';
+      })
+      .addCase(createModule.fulfilled, (store) => {
         store.status = 'success';
       });
   },

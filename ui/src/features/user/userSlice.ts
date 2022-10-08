@@ -71,7 +71,13 @@ export const loadUserInfo = createAsyncThunk<userInfoResp, string, { extra: { cl
 const userSlice = createSlice({
   name: '@@user',
   initialState,
-  reducers: {},
+  reducers: {
+    logOutUser: (state) => {
+      state.isAuthorized = false;
+      state.user = initialState.user;
+      state.status = 'idle';
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadUserInfo.pending, (store) => {
@@ -89,6 +95,8 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
+
+export const { logOutUser } = userSlice.actions;
 
 export const getUserInfoSelector = (state: RootState) => ({
   user: state.user.user,
