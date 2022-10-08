@@ -4,57 +4,74 @@ import ModuleCard from '../../shared/Card';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import Modal from '../../shared/Modal';
-import { useCreateModuleMutation } from '../../../services/modules';
+import { useCreateModuleMutation, useDeleteModuleMutation, useUpdateModuleMutation } from '../../../services/modules';
+import { CREATE_MODULE_TABS } from '../../../constants';
 import styles from './styles.scss'
 
 
 export default function Modules(props) {
     const { data: profile, isLoading, isError, refetch } = useGetProfileQuery();
+    const [ deleteModule ] = useDeleteModuleMutation();
     const [ createModule ] = useCreateModuleMutation();
+    const [ updateModule ] = useUpdateModuleMutation();
+    const [ tab, setTab ] = useState('Create')
+    const [ injectFields, setInjectFields ] = useState({});
     const [ open, setOpen ] = useState(false);
+    
     const [ tabs, setTabs ] = useState({
-        Create: [
-            {
-                label: 'Name',
-                name: 'name',
-            },
-            {
-                label: 'Description',
-                name: 'description',
-            },
-            {
-                label: 'Private',
-                name: 'private',
-                type: 'boolean',
-                defaultChecked: true
-            },
-            {
-                label: 'Edited by outsiders',
-                name: 'editedByOutsiders',
-                type: 'boolean'
-            }
-        ]
+        Create: CREATE_MODULE_TABS,
+        Update: CREATE_MODULE_TABS
     })
 
-    const handleAddModule = () => setOpen(prev => !prev)
+    const actions = {
+        Create: async (payload) => {
+            const { status } = await createModule(payload).unwrap();
 
-    const onSend = async (payload) => {
-        const { status } = await createModule(payload).unwrap();
+            if (!status) return
+            
+            refetch()
+            return setOpen(false)
+        },
+        Update: async (payload) => {
+            const { status } = await updateModule(payload).unwrap();
 
-        if (!status) return
+            if (!status) return
+            
+            refetch()
+            return setOpen(false)
+        }
+    }
+
+    const handleAddModule = () => {
+        setTab('Create')
+        setOpen(true)
+    }
+
+    const onSend = async (payload, action) => {
+        return await actions[action](payload)
+    }
+
+    const onDelete = async (id) => {
+        const { status } = await deleteModule(id).unwrap()
         
-        refetch()
-        setOpen(false)
+        if (!status) return
+        return refetch()
+    }
+
+    const onEdit = (id) => {
+        setInjectFields({ id })
+        setTab('Update')
+        setOpen(true)
     }
 
     return (
         <>
         <div className={styles.buttonsBlock}>
-            <Modal isOpen={open} onSend={onSend} onClose={() => setOpen(false)} tabs={tabs} defaultTab={'Create'} />
+            <Modal key={tab} isOpen={open} hideTabs injectFields={injectFields} onSend={onSend} onClose={() => setOpen(false)} tabs={tabs} defaultTab={tab} />
             <IconButton onClick={handleAddModule} color="primary" size="large"><AddCircleIcon fontSize="inherit"/></IconButton>
         </div>
         <div className={styles.cardsContainer}>
-            {profile?.data?.modules?.map(module => <ModuleCard key={module?.id} {...module} />)}
+            {profile?.data?.modules?.map(module => <ModuleCard onDelete={onDelete} onEdit={onEdit} key={module?.id} {...module} />)}
         </div>
         </>
     )

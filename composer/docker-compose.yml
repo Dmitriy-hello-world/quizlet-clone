@@ -70,7 +70,7 @@ services:
       - 80:80
       # - 443:443
   ui:
-    build: ../ui
+    build: ../desktop/ui
     container_name: ui
     restart: always
   # certbot:

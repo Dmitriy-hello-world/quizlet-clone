@@ -1,0 +1,20 @@
+.card {
+    position: relative !important;
+}
+
+.removeButton {
+    position: absolute !important;
+    right: 5px;
+    top: 5px;
+}
+
+.editButton {
+    position: absolute !important;
+    right: 5px;
+    bottom: 5px;
+}
+
+.moduleLink {
+    text-decoration: none;
+    color: rgb(25, 118, 209)
+}

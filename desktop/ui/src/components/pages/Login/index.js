@@ -5,7 +5,7 @@ import { useCreateUserMutation } from '../../../services/users'
 import { useCreateSessionMutation } from '../../../services/sessions'
 import { useDispatch } from 'react-redux'
 import { login } from '../../../features/sessions/sessionSlice'
-import { TOKEN } from '../../../constants'
+import { TOKEN, LOGIN_TABS, SIGN_UP_TABS } from '../../../constants'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
@@ -15,38 +15,8 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [ tabs, setTabs ] = useState({
-    'Login': [
-      {
-        label: 'Email',
-        name: 'email',
-      },
-      {
-        label: 'Password',
-        name: 'password',
-      },
-    ],
-    'Sign up': [
-      {
-        label: 'Name',
-        name: 'firstName',
-      },
-      {
-        label: "Second name",
-        name: "secondName"
-      },
-      {
-        label: 'Email',
-        name: 'email',
-      },
-      {
-        label: 'Password',
-        name: 'password',
-      },
-      {
-        label: 'Confirm password',
-        name: 'confirmPassword'
-      }
-    ]
+    'Login': LOGIN_TABS,
+    'Sign up': SIGN_UP_TABS
   })
 
   const handleCreateSession = async (payload) => {

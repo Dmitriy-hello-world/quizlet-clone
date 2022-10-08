@@ -15,7 +15,7 @@ class Module extends Base {
 
     static initRelations() {
         this.belongsTo(User);
-        this.hasMany(Word, { foreignKey: 'moduleId', onDelete: 'CASCADE' });
+        this.hasMany(Word, { foreignKey: 'moduleId', onDelete: 'CASCADE', as: 'words' });
     }
 }
 
