@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Route, Navigate, Routes, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
@@ -15,7 +15,9 @@ export default function SmartRoute(props) {
   return(
     <Routes>
       <Route path='/' element={layout}>
-        {routes.map(route => <Route {...route}/>)}
+        {routes.map(({ element, ...rest }, i) => <Route key={i} {...rest} element={
+          <Suspense fallback={<h2>Loading...</h2>}>{element}</Suspense>
+        } />)}
       </Route>
     </Routes>
   )

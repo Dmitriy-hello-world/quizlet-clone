@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 import styles from './styles.scss'
 
 export default function Modal(props) {
-  const { tabs, isOpen, onSend, onClose, defaultTab } = props
+  const { tabs, isOpen, onSend, hideTabs, injectFields, onClose, defaultTab } = props
   const [ currentTab, setCurrentTab ] = useState(defaultTab)
   const [ formData, setFormData ] = useState({})
 
@@ -50,22 +50,18 @@ export default function Modal(props) {
         <Box className={styles.HeaderBox}>
           <div className={styles.modalTitle}>{currentTab}</div>
           <div className={styles.headerButtons}>
-            {Object.keys(tabs).filter((tab) => tab !== currentTab).map((tab) => (
+            {!hideTabs ? Object.keys(tabs).filter((tab) => tab !== currentTab).map((tab) => (
                 <Button key={tab} onClick={changeTab(tab)} variant="contained">
                   {tab}
                 </Button>
-              ))}
+              )) : null}
           </div>
         </Box>
       </DialogTitle>
       <Box className={styles.FieldsBox} component="form">
         {tabs[currentTab].map((field) => fieldTypes[field?.type || 'string'](field))}
       </Box>
-      <Button
-        onClick={() => onSend(formData, currentTab)}
-        className={styles.sendButton}
-        variant="contained"
-      >
+      <Button onClick={() => onSend({ ...formData, ...injectFields }, currentTab)} className={styles.sendButton} variant="contained">
         Send
       </Button>
     </Dialog>

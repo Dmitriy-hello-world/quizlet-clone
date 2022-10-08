@@ -1,6 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 const { merge } = require('webpack-merge');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const modeConfiguration = env => require(`./webpackMods/webpack.${env}.config.js`)(env);
 
@@ -55,7 +55,8 @@ module.exports = ({ mode } = { mode: 'production' }) => {
                 favicon: "./public/favicon.ico",
                 manifest: "./public/manifest.json",
                 template : './public/index.html'
-            })
+            }),
+            new Dotenv()
         ]
     },
     modeConfiguration(mode))

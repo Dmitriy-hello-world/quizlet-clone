@@ -8,6 +8,7 @@ import { store } from './store'
 
 const LoginPage = lazy(async () => await import('./components/pages/Login'));
 const ModulesPage = lazy(async () => await import('./components/pages/Modules'));
+const ModulePage = lazy(async () => await import('./components/pages/Module'));
 
 function App() {
   const routes = [
@@ -18,6 +19,11 @@ function App() {
     {
       path: 'modules',
       element: <ModulesPage/>,
+      private: true
+    },
+    {
+      path: 'module/:id',
+      element: <ModulePage/>,
       private: true
     }
   ]

@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react'; 
 import Menu from '../../shared/Menu';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 export default function Layout(props) {
-    const [ value, setValue ] = useState('modules');
-
-    const handleChange = (_, newValue) => {
-        setValue(newValue)
-    }
+    const location = useLocation()
 
     return (
         <>
-            <Menu handleChange={handleChange} value={value} />
+            <Menu value={location.pathname} />
             <Outlet/>
         </>
     )

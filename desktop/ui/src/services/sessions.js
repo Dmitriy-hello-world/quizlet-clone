@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { API_URL } from '../constants'
 
 export const sessionsApi = createApi({
   reducerPath: 'sessionsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost/api/v1/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
     createSession: builder.mutation({
       query: (payload) => ({

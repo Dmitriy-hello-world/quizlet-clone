@@ -3,13 +3,18 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
+import { Link } from "react-router-dom";
+import styles from './styles.scss'
 
 export default function ModuleCard(props) {
-    const { name, description } = props
+    const { id, name, description, onDelete, onEdit } = props
 
   return (
-    <Card sx={{ maxWidth: 300, minWidth: 250, m: 2 }}>
+    <Card className={styles.card} sx={{ maxWidth: 300, minWidth: 250, m: 2 }}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {name}
@@ -19,8 +24,10 @@ export default function ModuleCard(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn</Button>
+        <Button size="small"><Link className={styles.moduleLink} to={`/module/${id}`} >Learn</Link></Button>
       </CardActions>
+      <IconButton className={styles.removeButton} onClick={() => onDelete(id)}><DeleteIcon /></IconButton>
+      <IconButton className={styles.editButton} onClick={() => onEdit(id)}><EditIcon /></IconButton>
     </Card>
   );
 }

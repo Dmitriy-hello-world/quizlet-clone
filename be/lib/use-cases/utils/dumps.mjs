@@ -35,6 +35,7 @@ export function dumpModule(module) {
         description       : module.description,
         private           : module.private,
         editedByOutsiders : module.editedByOutsiders,
+        words             : module?.words?.map(dumpWord),
         createdAt         : module.createdAt.toISOString(),
         updatedAt         : module.updatedAt.toISOString()
     };
