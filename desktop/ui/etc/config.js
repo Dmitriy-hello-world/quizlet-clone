@@ -1,0 +1,1 @@
+export const API_URL = `http://hisokacards.online/api/v1/`
