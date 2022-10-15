@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { API_URL } from '../../etc/config'
+import { API_URL } from '../constants'
 
 export const sessionsApi = createApi({
   reducerPath: 'sessionsApi',

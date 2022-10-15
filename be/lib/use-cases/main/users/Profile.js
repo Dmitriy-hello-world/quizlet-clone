@@ -3,7 +3,6 @@ import {
 } from '../../../../packages.mjs';
 import Base         from '../../Base.mjs';
 import { dumpUser } from '../../utils/dumps.mjs';
-import Module       from '../../../domain-model/Module.mjs';
 import User         from '../../../domain-model/User.mjs';
 import DMX          from '../../../domain-model/X.mjs';
 
@@ -12,10 +11,7 @@ export default class UsersProfile extends Base {
         try {
             const { userId } = this.context;
 
-            const user = await User.findByPk(userId, { include : {
-                model : Module,
-                as    : 'modules'
-            } });
+            const user = await User.findByPk(userId);
 
             return { data: dumpUser(user) };
         } catch (x) {

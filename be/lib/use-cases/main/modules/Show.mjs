@@ -4,7 +4,6 @@ import {
 import Base         from '../../Base.mjs';
 import { dumpModule } from '../../utils/dumps.mjs';
 import Module       from '../../../domain-model/Module.mjs';
-import Word         from '../../../domain-model/Word.mjs';
 import DMX          from '../../../domain-model/X.mjs';
 
 export default class UsersShow extends Base {
@@ -16,10 +15,7 @@ export default class UsersShow extends Base {
         try {
             const { userId } = this.context;
 
-            const module = await Module.findByPk(id, { include : {
-                model : Word,
-                as    : 'words'
-            } });
+            const module = await Module.findByPk(id);
 
             if (module.private && userId !== module.userId) {
                 throw new X({

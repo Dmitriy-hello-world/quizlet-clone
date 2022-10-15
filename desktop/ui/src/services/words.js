@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { TOKEN } from '../constants'
-import { API_URL } from '../../etc/config'
+import { TOKEN, API_URL } from '../constants'
 
 export const wordsApi = createApi({
   reducerPath: 'wordsApi',
@@ -17,6 +16,15 @@ export const wordsApi = createApi({
         },
       }),
       invalidatesTags: ['Post'],
+    }),
+    getWords: builder.query({
+      query: (queries) => ({
+        url: queries ? `words?${Object.entries(queries).flatMap(que => que.join('=')).join('&')}` : 'modules',
+        headers: {
+          'Authorization': localStorage.getItem(TOKEN),
+        },
+      }),
+      transformResponse: ({ data, meta }) => ({ list: data, ...meta })
     }),
     updateWord: builder.mutation({
         query: ({ id, ...payload}) => ({
@@ -43,4 +51,4 @@ export const wordsApi = createApi({
   }),
 })
 
-export const { useCreateWordMutation, useUpdateWordMutation, useDeleteWordMutation } = wordsApi
+export const { useCreateWordMutation, useGetWordsQuery, useUpdateWordMutation, useDeleteWordMutation } = wordsApi

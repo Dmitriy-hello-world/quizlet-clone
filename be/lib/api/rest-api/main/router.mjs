@@ -19,6 +19,7 @@ export default async (router) => {
         secureRouter.addHook('preHandler', checkSession);
 
         secureRouter.post('/',      controllers.words.create);
+        secureRouter.get('/',       controllers.words.list);
         secureRouter.put('/:id',    controllers.words.update);
         secureRouter.delete('/:id', controllers.words.delete);
     }, { prefix: '/words' });

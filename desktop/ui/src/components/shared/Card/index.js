@@ -27,7 +27,7 @@ export default function ModuleCard(props) {
         <Button size="small"><Link className={styles.moduleLink} to={`/module/${id}`} >Learn</Link></Button>
       </CardActions>
       <IconButton className={styles.removeButton} onClick={() => onDelete(id)}><DeleteIcon /></IconButton>
-      <IconButton className={styles.editButton} onClick={() => onEdit(id)}><EditIcon /></IconButton>
+      <IconButton className={styles.editButton} onClick={() => onEdit({ id, name, description })}><EditIcon /></IconButton>
     </Card>
   );
 }

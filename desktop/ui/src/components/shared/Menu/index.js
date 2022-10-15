@@ -13,7 +13,7 @@ export default function Menu(props) {
     }
 
     return (
-        <BottomNavigation sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} value={value} onChange={handleChange}>
+        <BottomNavigation sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1111 }} value={value} onChange={handleChange}>
             <BottomNavigationAction label="Modules" value="/modules" icon={<FolderIcon />} />
         </BottomNavigation>
     )

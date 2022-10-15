@@ -4,20 +4,23 @@ import {
 } from '../../../../packages.mjs';
 
 import Base         from '../../Base.mjs';
-import { dumpModule } from '../../utils/dumps.mjs';
+import { dumpWord } from '../../utils/dumps.mjs';
+import Word         from '../../../domain-model/Word.mjs';
 import Module       from '../../../domain-model/Module.mjs';
 import DMX          from '../../../domain-model/X.mjs';
 
-export default class ModulesList extends Base {
+export default class WordsList extends Base {
     static validationRules = {
+        moduleId : [ 'required', 'uuid' ],
         search   : [ { 'min_length': 2 } ],
         limit    : [ 'positive_integer', { 'max_number': 20 }, { 'default': 20 } ],
         offset   : [ 'integer', { 'min_number': 0 }, { 'default': 0 } ],
-        sortedBy : [ { 'one_of': [ 'id', 'name', 'private', 'editedByOutsiders', 'createdAt', 'updatedAt' ] }, { 'default': 'createdAt' } ],
+        sortedBy : [ { 'one_of': [ 'term', 'definition', 'createdAt', 'updatedAt' ] }, { 'default': 'createdAt' } ],
         order    : [ { 'one_of': [ 'ASC', 'DESC' ] }, { 'default': 'DESC' } ]
     };
 
     async execute({
+        moduleId,
         limit,
         offset,
         search,
@@ -26,24 +29,33 @@ export default class ModulesList extends Base {
     }) {
         try {
             const { userId } = this.context;
-            const searchFields = [ 'name', 'description' ];
+            const module = Module.findByPk(moduleId);
+
+            if (module.private && userId !== module.userId) {
+                throw new X({
+                    code   : 'PERMISSION_DENIED',
+                    fields : { id: 'MODULE_IS_PRIVATE' }
+                });
+            }
+
+            const searchFields = [ 'term', 'definition' ];
             const findQuery = search
                 ? { [Op.or]: searchFields.map(field => ({ [field]: { [Op.like]: `%${ search }%` } })) }
                 : {};
 
             const dbRequest = {
-                where : { ...findQuery, userId },
+                where : { ...findQuery, moduleId },
                 order : [ [ sortedBy, order ] ],
                 limit,
                 offset
             };
 
             const [ { count: filteredCount, rows: users }, totalCount ] = await Promise.all([
-                Module.findAndCountAll(dbRequest),
-                Module.count({ where: { userId } })
+                Word.findAndCountAll(dbRequest),
+                Word.count({ where: { moduleId } })
             ]);
 
-            const data = users.map(dumpModule);
+            const data = users.map(dumpWord);
 
             return {
                 data,

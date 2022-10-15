@@ -12,7 +12,7 @@ import styles from './styles.scss'
 export default function Modal(props) {
   const { tabs, isOpen, onSend, hideTabs, injectFields, onClose, defaultTab } = props
   const [ currentTab, setCurrentTab ] = useState(defaultTab)
-  const [ formData, setFormData ] = useState({})
+  const [ formData, setFormData ] = useState(Object.fromEntries(tabs[defaultTab]?.map(tab => tab?.value ? [tab?.name, tab?.value] : [])))
 
   const changeTab = (tab) => () => setCurrentTab(tab)
 
@@ -28,6 +28,7 @@ export default function Modal(props) {
       }
       id="outlined-basic"
       {...field}
+      value={formData?.[field.name]}
       variant="outlined"
     />),
     boolean: (field) => (<FormControlLabel 
