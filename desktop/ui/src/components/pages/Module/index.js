@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { useGetModuleQuery } from "../../../services/modules"
 import { Stack, TextField, IconButton } from "@mui/material";
-import { useCreateWordMutation, useDeleteWordMutation, useUpdateWordMutation } from "../../../services/words";
+import { useCreateWordMutation, useDeleteWordMutation, useGetWordsQuery, useUpdateWordMutation } from "../../../services/words";
 import { WORD_UPDATE_TABS } from "../../../constants";
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import List from '@mui/material/List';
@@ -14,7 +14,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import Avatar from '@mui/material/Avatar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from '../../shared/Modal'
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import StyleIcon from '@mui/icons-material/Style';
 import { FlashcardArray } from "react-quizlet-flashcard";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import styles from './styles.scss';
@@ -22,7 +22,7 @@ import styles from './styles.scss';
 
 export default function Module(props) {
     const { id } = useParams();
-    const { data, isLoading, isError, refetch } = useGetModuleQuery(id);
+    const { data: module } = useGetModuleQuery(id);
     const [ createWord ] = useCreateWordMutation();
     const [ updateWord ] = useUpdateWordMutation();
     const [ deleteWord ] = useDeleteWordMutation();
@@ -34,6 +34,10 @@ export default function Module(props) {
         Update: WORD_UPDATE_TABS
     })
 
+    const { data: words, isLoading, isError, refetch } = useGetWordsQuery({ moduleId: id })
+
+    console.log({module, words})
+
     const handleOnChange = (event) => {
         setFormData(prev => ({
             ...prev,
@@ -42,6 +46,7 @@ export default function Module(props) {
     }
 
     const handleSend = async () => {
+        setFormData(prev => Object.fromEntries(Object.entries(prev).map(([key]) => [key, ''])))
         await createWord({ moduleId: id, ...formData });
         refetch()
     }
@@ -63,7 +68,7 @@ export default function Module(props) {
     }
 
     if (startLearn) {
-        const cards = data?.words.map((word, i) => ({
+        const cards = words?.list.map((word, i) => ({
             id: i,
             front: word?.term,
             back: word?.definition,
@@ -81,16 +86,16 @@ export default function Module(props) {
 
     return (
         <>
-        <IconButton color="primary" onClick={() => setStartLearn(true)} size="large" className={styles.startButton}><ArrowCircleRightIcon fontSize="large" /></IconButton>
+        <IconButton color="primary" onClick={() => setStartLearn(true)} size="large" className={styles.startButton}><StyleIcon fontSize="large" /></IconButton>
         <Modal isOpen={open} hideTabs injectFields={injectFields} onSend={onSend} onClose={() => setOpen(false)} tabs={tabs} defaultTab='Update' />
-        <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-            <TextField id="standard-basic" label="Key" name="term" variant="standard" onChange={handleOnChange}/>
-            <TextField id="standard-basic" label="Value" name="definition" variant="standard" onChange={handleOnChange}/>
+        <Stack direction="row" className={styles.Stack} justifyContent="center" alignItems="center" spacing={1}>
+            <TextField id="standard-basic" fullWidth label="Key" name="term" value={formData.term} variant="standard" onChange={handleOnChange}/>
+            <TextField id="standard-basic" fullWidth label="Value" name="definition" value={formData.definition} variant="standard" onChange={handleOnChange}/>
             <IconButton color="primary" size="large" onClick={handleSend}><AddBoxIcon sx={{ fontSize: 45 }} /></IconButton>
         </Stack>
         <Stack direction="col" justifyContent="center" alignItems="center">
             <List className={styles.listBlock}>
-                {data?.words?.map(word => (
+                {words?.list?.map(word => (
                     <ListItem
                     key={word.id}
                     secondaryAction={

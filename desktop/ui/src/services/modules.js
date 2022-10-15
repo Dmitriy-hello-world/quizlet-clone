@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { TOKEN } from '../constants'
-import { API_URL } from '../../etc/config'
+import { TOKEN, API_URL } from '../constants'
 
 export const modulesApi = createApi({
   reducerPath: 'modulesApi',
@@ -38,6 +37,15 @@ export const modulesApi = createApi({
         }
       })
     }),
+    getModules: builder.query({
+      query: (queries) => ({
+        url: queries ? `modules?${Object.entries(queries).flatMap(que => que.join('=')).join('&')}` : 'modules',
+        headers: {
+          'Authorization': localStorage.getItem(TOKEN),
+        },
+      }),
+      transformResponse: ({ data, meta }) => ({ modules: data, ...meta }),
+    }),
     getModule: builder.query({
       query: (id) => ({
         url: `modules/${id}`,
@@ -50,4 +58,4 @@ export const modulesApi = createApi({
   }),
 })
 
-export const { useCreateModuleMutation, useDeleteModuleMutation, useUpdateModuleMutation, useGetModuleQuery } = modulesApi
+export const { useCreateModuleMutation, useGetModulesQuery, useDeleteModuleMutation, useUpdateModuleMutation, useGetModuleQuery } = modulesApi

@@ -7,7 +7,6 @@ export function dumpUser(user) {
         firstName  : user.firstName,
         secondName : user.secondName,
         avatarUrl  : user.avatar ? generateImagesURL(user.avatar) : '',
-        modules    : user?.modules?.map(dumpModule),
         createdAt  : user.createdAt.toISOString(),
         updatedAt  : user.updatedAt.toISOString()
     };
@@ -35,7 +34,6 @@ export function dumpModule(module) {
         description       : module.description,
         private           : module.private,
         editedByOutsiders : module.editedByOutsiders,
-        words             : module?.words?.map(dumpWord),
         createdAt         : module.createdAt.toISOString(),
         updatedAt         : module.updatedAt.toISOString()
     };

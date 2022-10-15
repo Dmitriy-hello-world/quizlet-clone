@@ -1,27 +1,44 @@
 import React, { useState, useEffect } from 'react'; 
-import { useGetProfileQuery } from '../../../services/users';
 import ModuleCard from '../../shared/Card';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
+import ReactPaginate from 'react-paginate';
+import { TextField } from '@mui/material';
 import Modal from '../../shared/Modal';
-import { useCreateModuleMutation, useDeleteModuleMutation, useUpdateModuleMutation } from '../../../services/modules';
-import { CREATE_MODULE_TABS } from '../../../constants';
+import CloseIcon from '@mui/icons-material/Close';
+import InputAdornment from '@mui/material/InputAdornment';
+import { useCreateModuleMutation, useGetModulesQuery, useDeleteModuleMutation, useUpdateModuleMutation } from '../../../services/modules';
+import { CREATE_MODULE_TABS, PER_PAGE } from '../../../constants';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from './styles.scss'
 
 
 export default function Modules(props) {
-    const { data: profile, isLoading, isError, refetch } = useGetProfileQuery();
     const [ deleteModule ] = useDeleteModuleMutation();
     const [ createModule ] = useCreateModuleMutation();
     const [ updateModule ] = useUpdateModuleMutation();
     const [ tab, setTab ] = useState('Create')
+    const [ currentPage, setCurrentPage ] = useState(0);
     const [ injectFields, setInjectFields ] = useState({});
+    const [ refreshKey, setRefresh ] = useState(new Date())
+    const [ query, setQuery ] = useState({});
     const [ open, setOpen ] = useState(false);
+    const [ search, setSearch ] = useState('');
     
     const [ tabs, setTabs ] = useState({
         Create: CREATE_MODULE_TABS,
         Update: CREATE_MODULE_TABS
     })
+
+    useEffect(() => {
+        setQuery({
+            offset: currentPage * PER_PAGE,
+            ...(search?.length > 2 ? { search } : {})
+        })
+    }, [ search, currentPage ])
+
+    const { data, isLoading, isError, refetch } = useGetModulesQuery(query);
 
     const actions = {
         Create: async (payload) => {
@@ -44,6 +61,7 @@ export default function Modules(props) {
 
     const handleAddModule = () => {
         setTab('Create')
+        setRefresh(new Date());
         setOpen(true)
     }
 
@@ -58,21 +76,65 @@ export default function Modules(props) {
         return refetch()
     }
 
-    const onEdit = (id) => {
+    const onEdit = ({ id, ...rest }) => {
         setInjectFields({ id })
+        setTabs(prev => ({
+            ...prev,
+            Update : CREATE_MODULE_TABS.map(field => ({
+                ...field,
+                ...(rest?.[field?.name] ? { value: rest[field?.name] } : {})
+            }))
+        }))
         setTab('Update')
+        setRefresh(new Date());
         setOpen(true)
     }
 
+    const handlePageClick = ({ selected }) => setCurrentPage(selected)
+
+    const handleSearch = (event) => setSearch(event.target.value)
+
+    const handleClearSearch = () => setSearch('');
+
     return (
         <>
+        <Modal key={refreshKey} isOpen={open} hideTabs injectFields={injectFields} onSend={onSend} onClose={() => setOpen(false)} tabs={tabs} defaultTab={tab} />
         <div className={styles.buttonsBlock}>
-            <Modal key={tab} isOpen={open} hideTabs injectFields={injectFields} onSend={onSend} onClose={() => setOpen(false)} tabs={tabs} defaultTab={tab} />
             <IconButton onClick={handleAddModule} color="primary" size="large"><AddCircleIcon fontSize="inherit"/></IconButton>
         </div>
+        <TextField 
+        className={styles.searchField} 
+        onChange={handleSearch} 
+        id="standard-basic" 
+        label="Search" 
+        value={search}
+        variant="standard"
+        InputProps = {{
+            endAdornment: 
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClearSearch}
+                  >
+                    <CloseIcon/>
+                  </IconButton>
+                </InputAdornment> 
+        }}
+        />
         <div className={styles.cardsContainer}>
-            {profile?.data?.modules?.map(module => <ModuleCard onDelete={onDelete} onEdit={onEdit} key={module?.id} {...module} />)}
+            {data?.modules?.map(module => <ModuleCard onDelete={onDelete} onEdit={onEdit} key={module?.id} {...module} />)}
         </div>
+        <ReactPaginate
+            className={styles.pagination}
+            activeClassName={styles.activePage}
+            breakLabel="..."
+            nextLabel={<ArrowForwardIosIcon sx={{ fontSize: 12 }}/>}
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={Math.ceil(data?.totalCount / PER_PAGE)}
+            previousLabel={<ArrowBackIosNewIcon sx={{ fontSize: 12 }} />}
+            renderOnZeroPageCount={null}
+         />
         </>
     )
 }

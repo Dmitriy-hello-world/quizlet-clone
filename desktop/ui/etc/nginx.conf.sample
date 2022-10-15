@@ -12,7 +12,7 @@ server {
         try_files $uri $uri =404;
     }
 
-    location /static/ {
+    location /public/ {
         expires max;
         root   /ui/build/;
         try_files $uri $uri/;

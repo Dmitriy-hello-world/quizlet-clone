@@ -1,4 +1,6 @@
 export const TOKEN   = 'TOKEN'
+export const PER_PAGE = 20
+export const API_URL = process.env.API_URL || 'http://hisokacards.online/api/v1/'
 export const CREATE_MODULE_TABS = [
     {
         label: 'Name',
@@ -20,6 +22,7 @@ export const CREATE_MODULE_TABS = [
         type: 'boolean'
     }
 ]
+
 export const LOGIN_TABS = [
     {
       label: 'Email',
@@ -29,7 +32,7 @@ export const LOGIN_TABS = [
       label: 'Password',
       name: 'password',
     },
-  ]
+]
 
 export const SIGN_UP_TABS = [
     {
@@ -52,15 +55,15 @@ export const SIGN_UP_TABS = [
       label: 'Confirm password',
       name: 'confirmPassword'
     }
-  ]
+]
 
 export const WORD_UPDATE_TABS = [
-  {
-    label: 'Key',
-    name: 'term'
-  },
-  {
-    label: 'Value',
-    name: 'definition'
-  }
+    {
+      label: 'Key',
+      name: 'term'
+    },
+    {
+      label: 'Value',
+      name: 'definition'
+    }
 ]

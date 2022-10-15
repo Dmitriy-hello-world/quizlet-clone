@@ -37,3 +37,13 @@
     border-radius: 10px;
     overflow: auto;
 }
+
+.Stack {
+    margin-left: 120px;
+    margin-right: 120px;
+
+    @media (max-width: 500px) {
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+}
