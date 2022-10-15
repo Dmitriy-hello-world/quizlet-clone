@@ -59,18 +59,21 @@ export const createUser = createAsyncThunk<CreateUserResp, FormValues, { extra: 
   async (createUserBody, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: CreateUserResp = await client.post(api.CREATE_USER, createUserBody);
+
       if (response.data.status === 0) {
         throw new Error('Server Error!');
+      } else {
+        setTimeout(() => {
+          dispatch(resetStatus());
+          dispatch(openModal('log'));
+        }, 500);
       }
-
-      setTimeout(() => {
-        dispatch(resetStatus());
-        dispatch(openModal('log'));
-      }, 500);
 
       return response;
     } catch (error) {
-      dispatch(resetStatus());
+      setTimeout(() => {
+        dispatch(resetStatus());
+      }, 500);
       return rejectWithValue(error);
     }
   }
@@ -81,25 +84,29 @@ export const startSession = createAsyncThunk<SessionsResp, SessionBody, { extra:
   async (createUserBody, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: SessionsResp = await client.post(api.START_SESSION, createUserBody);
-      setTimeout(() => {
-        dispatch(resetStatus());
-      }, 1000);
 
       if (response.data.status === 0) {
         throw new Error('Server Error!');
+      } else {
+        setTimeout(() => {
+          dispatch(resetStatus());
+        }, 1000);
       }
 
       dispatch(loadUserInfo(response.data.data.jwt));
 
       return response;
     } catch (error) {
+      setTimeout(() => {
+        dispatch(resetStatus());
+      }, 1000);
       return rejectWithValue(error);
     }
   }
 );
 
 export const createModule = createAsyncThunk<userModuleResp, modulePrm, { extra: { client: axiosType; api: apiType } }>(
-  '@@form/load-modules',
+  '@@form/create-module',
   async ({ token, name, description }, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: userModuleResp = await client.post(
@@ -120,11 +127,10 @@ export const createModule = createAsyncThunk<userModuleResp, modulePrm, { extra:
       setTimeout(() => {
         dispatch(resetStatus());
       }, 1000);
-
       if (response.data.status === 0) {
         throw new Error('something went wrong!');
       } else {
-        dispatch(loadModules(token));
+        dispatch(loadModules({ page: 1, token }));
       }
 
       return response;
