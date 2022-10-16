@@ -1,0 +1,15 @@
+.startButton {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.Stack {
+    margin-left: 120px;
+    margin-right: 120px;
+
+    @media (max-width: 500px) {
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+}

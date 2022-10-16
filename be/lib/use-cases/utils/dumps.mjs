@@ -21,6 +21,7 @@ export function dumpWord(word) {
         term       : word.term,
         definition : word.definition,
         imageUrl   : word.imageUrl,
+        repeatAt   : word.repeatAt.toISOString(),
         createdAt  : word.createdAt.toISOString(),
         updatedAt  : word.updatedAt.toISOString()
     };

@@ -8,7 +8,9 @@ class Word extends Base {
         moduleId   : { type: DT.UUID, allowNull: false  },
         term       : { type: DT.STRING, allowNull: false },
         definition : { type: DT.STRING, allowNull: false },
-        imageUrl   : { type: DT.STRING }
+        imageUrl   : { type: DT.STRING },
+        stage      : { type: DT.INTEGER, defaultValue: 1 },
+        repeatAt   : { type: DT.DATE, allowNull: true, defaultValue: DT.NOW }
     }
 
     static initRelations() {

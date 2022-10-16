@@ -1,0 +1,55 @@
+.buttonsBlock {
+    top: 10px;
+    z-index: 3;
+    margin-left: 10px;
+    position: sticky !important;
+}
+
+.cardsContainer {
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchField {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    z-index: 5;
+    transform: translate(-50%, -50%);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 100px;
+
+
+    .activePage {
+        background-color: rgb(225, 225, 225);
+        color: black;
+    }
+    
+
+    li {
+        margin-left: 5px;
+        margin-right: 5px;
+        list-style-type: none;
+        color: white;
+        cursor: pointer;
+        background-color: rgb(25, 118, 209);
+        border-radius: 5px;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+
+        a {
+            padding: 10px;
+        }
+    }
+}
