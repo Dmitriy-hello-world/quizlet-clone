@@ -18,10 +18,11 @@ export default async (router) => {
     router.register(async (secureRouter) => {
         secureRouter.addHook('preHandler', checkSession);
 
-        secureRouter.post('/',      controllers.words.create);
-        secureRouter.get('/',       controllers.words.list);
-        secureRouter.put('/:id',    controllers.words.update);
-        secureRouter.delete('/:id', controllers.words.delete);
+        secureRouter.post('/',            controllers.words.create);
+        secureRouter.get('/',             controllers.words.list);
+        secureRouter.put('/:id/response', controllers.words.response);
+        secureRouter.put('/:id',          controllers.words.update);
+        secureRouter.delete('/:id',       controllers.words.delete);
     }, { prefix: '/words' });
 
     // Modules

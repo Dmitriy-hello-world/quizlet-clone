@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
     Exception as X
     , Op
@@ -11,12 +12,13 @@ import DMX          from '../../../domain-model/X.mjs';
 
 export default class WordsList extends Base {
     static validationRules = {
-        moduleId : [ 'required', 'uuid' ],
-        search   : [ { 'min_length': 2 } ],
-        limit    : [ 'positive_integer', { 'max_number': 20 }, { 'default': 20 } ],
-        offset   : [ 'integer', { 'min_number': 0 }, { 'default': 0 } ],
-        sortedBy : [ { 'one_of': [ 'term', 'definition', 'createdAt', 'updatedAt' ] }, { 'default': 'createdAt' } ],
-        order    : [ { 'one_of': [ 'ASC', 'DESC' ] }, { 'default': 'DESC' } ]
+        moduleId  : [ 'required', 'uuid' ],
+        search    : [ { 'min_length': 2 } ],
+        limit     : [ 'positive_integer', { 'max_number': 20 }, { 'default': 20 } ],
+        offset    : [ 'integer', { 'min_number': 0 }, { 'default': 0 } ],
+        forgotten : [ 'boolean', { 'default': false } ],
+        sortedBy  : [ { 'one_of': [ 'term', 'definition', 'createdAt', 'updatedAt' ] }, { 'default': 'createdAt' } ],
+        order     : [ { 'one_of': [ 'ASC', 'DESC' ] }, { 'default': 'DESC' } ]
     };
 
     async execute({
@@ -24,6 +26,7 @@ export default class WordsList extends Base {
         limit,
         offset,
         search,
+        forgotten,
         sortedBy,
         order
     }) {
@@ -44,7 +47,11 @@ export default class WordsList extends Base {
                 : {};
 
             const dbRequest = {
-                where : { ...findQuery, moduleId },
+                where : {
+                    ...findQuery,
+                    moduleId,
+                    ...(forgotten ? { repeatAt: { [Op.lte]: moment() } } : {})
+                },
                 order : [ [ sortedBy, order ] ],
                 limit,
                 offset
