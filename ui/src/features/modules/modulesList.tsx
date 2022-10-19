@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 
-import Card from '../../components/Card';
+import Card from '../../components/Module';
 
 import { useAppDispatch } from '../../store/store';
 import { getToken } from '../../utils/functions';

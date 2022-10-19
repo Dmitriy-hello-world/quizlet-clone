@@ -2,6 +2,8 @@ import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ListItem, ListItemButton, ListItemText, List } from '@mui/material';
 
+import { Link } from 'react-router-dom';
+
 import { filterModulesByName, getFilteredModules, getModules } from '../features/modules/modulesSlice';
 import { useAppDispatch } from '../store/store';
 
@@ -56,9 +58,11 @@ const SearchList: FC<Props> = ({ searchValue, referWrapp, display, onSetDisplay 
       {modules.map((module) => {
         return (
           <ListItem key={module.id} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText sx={{ overflow: 'hidden', whiteSpace: 'nowrap' }} primary={module.name} />
-            </ListItemButton>
+            <Link to={`/personal/${module.name}`} style={{ color: 'white', width: '100%', textDecoration: 'none' }}>
+              <ListItemButton sx={{ textAlign: 'center' }}>
+                <ListItemText sx={{ overflow: 'hidden', whiteSpace: 'nowrap' }} primary={module.name} />
+              </ListItemButton>
+            </Link>
           </ListItem>
         );
       })}
