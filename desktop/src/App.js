@@ -37,7 +37,7 @@ function App() {
   return (
     <Provider store={store}>
       <HashRouter>
-          <SmartRoute routes={routes} layout={<Layout/>} loginRoute="/" mainRoute="/modules" />
+          <SmartRoute routes={routes} layout={<Layout/>} rootPath="/" loginRoute="/" mainRoute="/modules" />
       </HashRouter>
     </Provider>
   )

@@ -42,17 +42,17 @@ export default function Modules(props) {
 
     const actions = {
         Create: async (payload) => {
-            const { status } = await createModule(payload).unwrap();
+            const { status, error } = await createModule(payload).unwrap();
 
-            if (!status) return
+            if (!status) throw error;
             
             refetch()
             return setOpen(false)
         },
         Update: async (payload) => {
-            const { status } = await updateModule(payload).unwrap();
+            const { status, error } = await updateModule(payload).unwrap();
 
-            if (!status) return
+            if (!status) throw error;
             
             refetch()
             return setOpen(false)
@@ -66,7 +66,28 @@ export default function Modules(props) {
     }
 
     const onSend = async (payload, action) => {
-        return await actions[action](payload)
+        try {
+            return await actions[action](payload)
+        } catch(error) {
+            const fields = {};
+
+            for(const key of Object.keys(error.fields)) {
+                fields[key.replace('data/', '')] = error.fields[key]
+            }
+
+            setTabs({
+                ...tabs,
+                [action]: tabs[action].map(field => {
+                if (fields?.[field.name]) return {
+                    ...field,
+                    error: true,
+                    helperText: fields[field.name].replaceAll('_', ' ').toLowerCase()
+                }
+
+                return field;
+                })
+            })
+        }
     }
 
     const onDelete = async (id) => {

@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types'
 import styles from './styles.scss'
 
 export default function ModuleCard(props) {
@@ -24,10 +25,28 @@ export default function ModuleCard(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small"><Link className={styles.moduleLink} to={`/module/${id}`} >Learn</Link></Button>
+        <Button size="small">
+          <Link className={styles.moduleLink} to={`/module/${id}`}>Learn</Link>
+        </Button>
       </CardActions>
-      <IconButton className={styles.removeButton} onClick={() => onDelete(id)}><DeleteIcon /></IconButton>
-      <IconButton className={styles.editButton} onClick={() => onEdit({ id, name, description })}><EditIcon /></IconButton>
+      <IconButton className={styles.removeButton} onClick={() => onDelete(id)}>
+        <DeleteIcon />
+      </IconButton>
+      <IconButton className={styles.editButton} onClick={() => onEdit({ id, name, description })}>
+        <EditIcon />
+      </IconButton>
     </Card>
   );
+}
+
+ModuleCard.propTypes = {
+  id          : PropTypes.string.isRequired,
+  name        : PropTypes.string.isRequired,
+  description : PropTypes.string,
+  onDelete    : PropTypes.func.isRequired,
+  onEdit      : PropTypes.func.isRequired
+}
+
+ModuleCard.defaultProps = {
+  description : ''
 }
