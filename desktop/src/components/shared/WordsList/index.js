@@ -7,7 +7,9 @@ import ListItemText from '@mui/material/ListItemText';
 import FolderIcon from '@mui/icons-material/Folder';
 import Avatar from '@mui/material/Avatar';
 import { IconButton } from "@mui/material";
+import { API_URL } from '../../../constants';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PropTypes from 'prop-types';
 import styles from './styles.scss';
 
 export default function WordsList(props) {
@@ -17,21 +19,21 @@ export default function WordsList(props) {
         <List className={styles.listBlock}>
             {words?.map(word => (
                 <ListItem
-                key={word.id}
-                secondaryAction={
+                  key={word.id}
+                  secondaryAction={
                     <>
-                    <IconButton sx={{ marginRight: 1 }} onClick={() => handleUpdate(word.id)} edge="end" aria-label="delete">
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton sx={{ marginRight: 1 }} onClick={() => handleDelete(word.id)} edge="end" aria-label="delete">
-                        <DeleteIcon />
-                    </IconButton>
+                      <IconButton sx={{ marginRight: 1 }} onClick={() => handleUpdate(word)} edge="end" aria-label="delete">
+                          <EditIcon />
+                      </IconButton>
+                      <IconButton sx={{ marginRight: 1 }} onClick={() => handleDelete(word.id)} edge="end" aria-label="delete">
+                          <DeleteIcon />
+                      </IconButton>
                     </> 
-                }
+              }
               >
                 <ListItemAvatar>
                   <Avatar>
-                    <FolderIcon />
+                    {word?.imageUrl ? <img src={`http://localhost${word?.imageUrl}`}/> : <FolderIcon />}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -43,4 +45,10 @@ export default function WordsList(props) {
             ))}
         </List>
     )
+}
+
+WordsList.propTypes = {
+  words        : PropTypes.array.isRequired,
+  handleDelete : PropTypes.func.isRequired,
+  handleUpdate : PropTypes.func.isRequired
 }

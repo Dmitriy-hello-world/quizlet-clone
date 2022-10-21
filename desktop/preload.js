@@ -4,6 +4,8 @@ contextBridge.exposeInMainWorld(
   'electron',
   {
     send: ipcRenderer.send,
-    on(event, fn) { ipcRenderer.on(event, fn) }
+    on(event, fn) { ipcRenderer.on(event, fn) },
+    once: ipcRenderer.once,
+    removeListener: ipcRenderer.removeListener
   }
 )

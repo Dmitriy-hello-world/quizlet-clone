@@ -59,6 +59,11 @@ export const SIGN_UP_TABS = [
 
 export const WORD_UPDATE_TABS = [
     {
+      label: 'Image',
+      name: 'image',
+      type: 'image'
+    },
+    {
       label: 'Key',
       name: 'term'
     },

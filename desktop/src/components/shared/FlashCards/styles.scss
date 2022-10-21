@@ -4,6 +4,7 @@
 
     .cardText {
         text-align: center;
+        overflow: auto !important;
     }
     
     .flipCard {
@@ -13,6 +14,13 @@
         min-height: 300px;
         background-color: transparent;
         perspective: 1000px;
+
+        .campaign {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 11111;
+        }
     
         .flipCardFront, .flipCardBack {
             position: absolute;

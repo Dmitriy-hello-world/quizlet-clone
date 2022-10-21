@@ -4,6 +4,7 @@ import { sessionsApi } from '../services/sessions'
 import { usersApi } from '../services/users'
 import { modulesApi } from '../services/modules'
 import { wordsApi } from '../services/words'
+import { imagesApi } from '../services/images'
 import sessionSlice from '../features/sessions/sessionSlice'
 
 export const store = configureStore({
@@ -12,7 +13,8 @@ export const store = configureStore({
     [sessionsApi.reducerPath]: sessionsApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [modulesApi.reducerPath]: modulesApi.reducer,
-    [wordsApi.reducerPath]: wordsApi.reducer
+    [wordsApi.reducerPath]: wordsApi.reducer,
+    [imagesApi.reducerPath]: imagesApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -20,6 +22,7 @@ export const store = configureStore({
       .concat(usersApi.middleware)
       .concat(modulesApi.middleware)
       .concat(wordsApi.middleware)
+      .concat(imagesApi.middleware)
 })
 
 setupListeners(store.dispatch)

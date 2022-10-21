@@ -1,24 +1,25 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
+const translate = require('translate-google')
 const isDev = require('electron-is-dev');
+const say = require('say')
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
     webPreferences: {
-      nodeIntegration : true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
 
+  mainWindow.maximize()
+
   mainWindow.loadURL(isDev ? 'http://localhost:8080' : `file://${path.join(__dirname, 'build/index.html')}`)
 
   // Open the DevTools.
-  // if (isDev) {
+  if (isDev) {
     mainWindow.webContents.openDevTools();
-  // }
+  }
 }
 
 // This method will be called when Electron has finished
@@ -40,6 +41,12 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
+
+ipcMain.on('translate', async (event, value) => {
+  if (value?.length) return event.reply('translated', await translate(value, { to: 'ru' }))
+})
+
+ipcMain.on('say', (_, word) => say.speak(word))
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

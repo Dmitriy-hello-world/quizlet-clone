@@ -5,8 +5,10 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { IconButton } from '@mui/material'
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './styles.scss'
 
 export default function Modal(props) {
@@ -16,33 +18,68 @@ export default function Modal(props) {
 
   const changeTab = (tab) => () => setCurrentTab(tab)
 
-  const fieldTypes = {
-    string: (field) => (<TextField
-      key={field.name}
-      className={styles.TextField}
-      onChange={(event) =>
-        setFormData((prev) => ({
-          ...prev,
-          [event.target.name]: event.target.value,
-        }))
+  const handleKeydown = (event) => {
+    switch(event.key) {
+        case 'Enter': {
+            onSend({ ...formData, ...injectFields }, currentTab)
+            break;
+        }
+        default: {
+            break;
+        }
       }
-      id="outlined-basic"
-      {...field}
-      value={formData?.[field.name] || ''}
-      variant="outlined"
-    />),
-    boolean: (field) => (<FormControlLabel 
-      key={field.name} 
-      control={<Checkbox 
-      defaultChecked={field?.defaultChecked}
-      checked={formData[field?.name]} 
-      onChange={(event) => setFormData((prev) => ({
-        ...prev,
-        [event.target.name]: event.target.value,
-      }))
-    } 
-    />} 
-    label={field?.label} />)
+    }
+
+  useEffect(() => {
+      document.addEventListener('keydown', handleKeydown);
+
+      return () => document.removeEventListener('keydown', handleKeydown)
+  }, [ formData, injectFields, currentTab ])
+
+  const fieldTypes = {
+    string: (field) => (
+      <TextField
+        key={field.name}
+        className={styles.TextField}
+        onChange={(event) =>
+          setFormData((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+          }))
+        }
+        id="outlined-basic"
+        {...field}
+        value={formData?.[field.name] || ''}
+        variant="outlined"
+      />
+    ),
+    image: (field) => (
+      <div key={field.name} className={styles.imageField}>
+        <IconButton color="primary" component="label">
+        <input onChange={(event) => setFormData((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.files[0],
+          }))} hidden {...field} accept="image/*" type="file" />
+        <AddPhotoAlternateIcon fontSize='large' />
+      </IconButton>
+      </div>
+    ),
+    boolean: (field) => (
+      <FormControlLabel 
+        key={field.name} 
+        control={
+        <Checkbox 
+          defaultChecked={field?.defaultChecked}
+          checked={formData[field?.name]} 
+          onChange={(event) => setFormData((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+          }))} 
+        />
+        } 
+        label={field?.label} 
+      />
+    )
   }
 
   return (
@@ -51,11 +88,13 @@ export default function Modal(props) {
         <Box className={styles.HeaderBox}>
           <div className={styles.modalTitle}>{currentTab}</div>
           <div className={styles.headerButtons}>
-            {!hideTabs ? Object.keys(tabs).filter((tab) => tab !== currentTab).map((tab) => (
+            {!hideTabs ? 
+            Object.keys(tabs).filter((tab) => tab !== currentTab).map((tab) => (
                 <Button key={tab} onClick={changeTab(tab)} variant="contained">
                   {tab}
                 </Button>
-              )) : null}
+              )) 
+            : null}
           </div>
         </Box>
       </DialogTitle>
@@ -70,7 +109,17 @@ export default function Modal(props) {
 }
 
 Modal.propTypes = {
-  tabs: PropTypes.object.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  onSend: PropTypes.func.isRequired,
+  tabs         : PropTypes.object.isRequired,
+  isOpen       : PropTypes.bool.isRequired,
+  onSend       : PropTypes.func.isRequired,
+  hideTabs     : PropTypes.bool,
+  injectFields : PropTypes.object,
+  onClose      : PropTypes.func,
+  defaultTab   : PropTypes.string.isRequired
+}
+
+Modal.defaultProps = {
+  hideTabs     : false,
+  injectFields : {},
+  onClose      : () => {}
 }
