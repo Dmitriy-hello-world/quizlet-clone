@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FolderIcon from '@mui/icons-material/Folder';
 import Avatar from '@mui/material/Avatar';
 import { IconButton } from "@mui/material";
-import { API_URL } from '../../../constants';
+import { HOST } from '../../../constants';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
 import styles from './styles.scss';
@@ -33,7 +33,7 @@ export default function WordsList(props) {
               >
                 <ListItemAvatar>
                   <Avatar>
-                    {word?.imageUrl ? <img src={`http://localhost${word?.imageUrl}`}/> : <FolderIcon />}
+                    {word?.imageUrl ? <img className={styles.image} src={`${HOST}${word?.imageUrl}`}/> : <FolderIcon />}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText

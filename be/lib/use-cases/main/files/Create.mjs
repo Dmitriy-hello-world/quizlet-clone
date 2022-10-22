@@ -7,6 +7,7 @@ import {
     Exception as X
 } from '../../../../packages.mjs';
 
+const MAX_FILE_SIZE = 200000;
 const MIME_TYPE_RULES = {
     images : { 'one_of': [ 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml' ] },
     chat   : { 'one_of' : [
@@ -32,6 +33,15 @@ export default class FileCreate extends Base {
     }
 
     async execute({ type, file, filename, mimetype }) {
+        if (file?.length > MAX_FILE_SIZE) {
+            throw new X({
+                code   : 'FILE_SIZE',
+                fields : {
+                    file : 'BAD_FILE'
+                }
+            });
+        }
+
         const extention      = path.extname(filename);
         const remoteFileName = `${uuid.v4()}${extention}`;
 

@@ -1,6 +1,6 @@
 echo "init bucket started"
 echo $MINIO_HOST
-/usr/bin/mc config host add minio http://${MINIO_HOST}:9000 "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}" --api S3v4
+/usr/bin/mc config host add minio http://${MINIO_HOST}:9000 "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}"
 /usr/bin/mc mb -p minio/object-storage
-/usr/bin/mc policy set public minio/object-storage/images
+/usr/bin/mc anonymous set download minio/object-storage/images
 echo "init bucket completed"

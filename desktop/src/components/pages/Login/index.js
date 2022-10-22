@@ -9,8 +9,8 @@ import { TOKEN, LOGIN_TABS, SIGN_UP_TABS } from '../../../constants'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
-  const [ createUser, { isLoading: userLoading } ] = useCreateUserMutation();
-  const [ createSession, { isLoading: sessionLoading } ] = useCreateSessionMutation()
+  const [ createUser ] = useCreateUserMutation();
+  const [ createSession ] = useCreateSessionMutation()
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

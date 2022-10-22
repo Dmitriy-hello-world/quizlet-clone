@@ -9,7 +9,6 @@ class Word extends Base {
         term       : { type: DT.STRING, allowNull: false },
         definition : { type: DT.STRING, allowNull: false },
         imageUrl   : { type: DT.STRING },
-        stage      : { type: DT.INTEGER, defaultValue: 1 },
         repeatAt   : { type: DT.DATE, allowNull: true, defaultValue: DT.NOW }
     }
 

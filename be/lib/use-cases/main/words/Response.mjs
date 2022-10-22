@@ -3,15 +3,13 @@ import {
     Exception as X
 } from '../../../../packages.mjs';
 
-import config from '../../../config.cjs';
-
 import Base         from '../../Base.mjs';
 import { dumpWord } from '../../utils/dumps.mjs';
 import Word         from '../../../domain-model/Word.mjs';
 import DMX          from '../../../domain-model/X.mjs';
 
-const STAGES_PER_ERROR = 3;
-const MAX_STAGE = 8;
+const STEPS_PER_ERROR = 3;
+const STEP = 2;
 
 export default class WordsResponse extends Base {
     static validationRules = {
@@ -37,17 +35,16 @@ export default class WordsResponse extends Base {
             let result = void 0;
 
             if (response) {
-                const [ key, value ] = config.stages[word?.stage];
+                const progress = moment(word?.updateAt).diff(moment(word?.repeatAt), 'hours') || 1;
 
                 result = await word.update({
-                    stage    : word.stage + 1 > MAX_STAGE ? MAX_STAGE : word.stage + 1,
-                    repeatAt : moment().add(+key, value)
+                    repeatAt : moment().add(progress * STEP, 'hours')
                 });
             } else {
-                const stage = word.stage - STAGES_PER_ERROR >= 1 ? word.stage - STAGES_PER_ERROR : 1;
+                const progress = moment(word?.updateAt).diff(moment(word?.repeatAt), 'hours') || 1;
 
                 result = await word.update({
-                    stage
+                    repeatAt : moment().add(Math.round(progress / STEPS_PER_ERROR), 'hours')
                 });
             }
 

@@ -14,7 +14,7 @@ export const imagesApi = createApi({
           'Authorization': localStorage.getItem(TOKEN),
         },
       }),
-      transformResponse: ({ data }) => ({ url: data?.key }),
+      transformResponse: ({ data }) => data?.key,
       invalidatesTags: ['Post'],
     })
   }),
