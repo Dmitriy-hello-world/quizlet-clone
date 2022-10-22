@@ -1,5 +1,6 @@
 export const TOKEN   = 'TOKEN'
 export const PER_PAGE = 20
+export const HOST = process.env.HOST || 'http://hisokacards.online'
 export const API_URL = process.env.API_URL || 'http://hisokacards.online/api/v1/'
 export const CREATE_MODULE_TABS = [
     {

@@ -8,6 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { IconButton } from '@mui/material'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import PropTypes from 'prop-types'
+import UploadImage from '../UploadImage'
 import React, { useState, useEffect } from 'react'
 import styles from './styles.scss'
 
@@ -55,13 +56,10 @@ export default function Modal(props) {
     ),
     image: (field) => (
       <div key={field.name} className={styles.imageField}>
-        <IconButton color="primary" component="label">
-        <input onChange={(event) => setFormData((prev) => ({
+        <UploadImage onChange={(event) => setFormData((prev) => ({
             ...prev,
             [event.target.name]: event.target.files[0],
-          }))} hidden {...field} accept="image/*" type="file" />
-        <AddPhotoAlternateIcon fontSize='large' />
-      </IconButton>
+          }))} {...field} />
       </div>
     ),
     boolean: (field) => (

@@ -7,6 +7,7 @@ import { TextField } from '@mui/material';
 import Modal from '../../shared/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
+import { CircularProgress } from '@mui/material';
 import { useCreateModuleMutation, useGetModulesQuery, useDeleteModuleMutation, useUpdateModuleMutation } from '../../../services/modules';
 import { CREATE_MODULE_TABS, PER_PAGE } from '../../../constants';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -117,6 +118,9 @@ export default function Modules(props) {
 
     const handleClearSearch = () => setSearch('');
 
+
+    if (isLoading) return <CircularProgress sx={{ position: 'absolute', top: '45%', left: '50%' }}/>
+
     return (
         <>
         <Modal 
@@ -133,13 +137,13 @@ export default function Modules(props) {
             <IconButton onClick={handleAddModule} color="primary" size="large"><AddCircleIcon fontSize="inherit"/></IconButton>
         </div>
         <TextField 
-        className={styles.searchField} 
-        onChange={handleSearch} 
-        id="standard-basic" 
-        label="Search" 
-        value={search}
-        variant="standard"
-        InputProps = {{
+            className={styles.searchField} 
+            onChange={handleSearch} 
+            id="standard-basic" 
+            label="Search" 
+            value={search}
+            variant="standard"
+            InputProps = {{
             endAdornment: 
                 <InputAdornment position="end">
                   <IconButton

@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import SmartRoute from './components/base/SmartRoute'
 import Layout from './components/pages/Layout'
+import { SnackbarProvider } from 'notistack';
 import { store } from './store'
 
 const LoginPage = lazy(async () => await import('./components/pages/Login'));
@@ -37,7 +38,9 @@ function App() {
   return (
     <Provider store={store}>
       <HashRouter>
+        <SnackbarProvider>
           <SmartRoute routes={routes} layout={<Layout/>} rootPath="/" loginRoute="/" mainRoute="/modules" />
+        </SnackbarProvider>
       </HashRouter>
     </Provider>
   )

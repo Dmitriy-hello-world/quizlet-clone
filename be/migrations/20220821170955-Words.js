@@ -8,7 +8,6 @@ module.exports = {
             term       : { type: Sequelize.STRING, allowNull: false },
             definition : { type: Sequelize.STRING, allowNull: false },
             imageUrl   : { type: Sequelize.STRING },
-            stage      : { type: Sequelize.INTEGER, defaultValue: 1 },
             repeatAt   : { type: Sequelize.DATE,  allowNull: true, defaultValue: Sequelize.NOW },
             createdAt  : { type: Sequelize.DATE, allowNull: false },
             updatedAt  : { type: Sequelize.DATE, allowNull: false }

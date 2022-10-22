@@ -2,6 +2,7 @@ import React, { Suspense, useEffect } from 'react'
 import { Route, Navigate, Routes, useLocation, useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { TOKEN } from '../../constants'
+import CircularProgress from '@mui/material/CircularProgress';
 import { useGetProfileQuery } from '../../services/users'
 import { logout } from '../../features/sessions/sessionSlice'
 import { useSelector, useDispatch } from 'react-redux'
@@ -36,7 +37,9 @@ export default function SmartRoute(props) {
     <Routes>
       <Route path={rootPath} element={layout}>
         {routes.map(({ element, ...rest }, i) => <Route key={i} {...rest} element={
-          <Suspense fallback={<h2>Loading...</h2>}>{element}</Suspense>
+          <Suspense fallback={
+            <CircularProgress sx={{ position: 'absolute', top: '45%', left: '50%' }}/>
+          }>{element}</Suspense>
         } />)}
       </Route>
     </Routes>

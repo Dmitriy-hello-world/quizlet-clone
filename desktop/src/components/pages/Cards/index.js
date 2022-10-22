@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import FlashCards from "../../shared/FlashCards";
 import { useGetWordsQuery, useResponseWordMutation } from "../../../services/words";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import CircularProgress from '@mui/material/CircularProgress';
 import styles from './styles.scss'
 
 export default function CardsGame() {
@@ -26,7 +27,9 @@ export default function CardsGame() {
                 <ArrowCircleLeftIcon fontSize="large" />
             </IconButton>
             <div className={styles.cardsBlock}>
-                {isLoading ? 'Loading' : <FlashCards onResponse={handleResponse} cards={data?.list} />}
+                {isLoading ? 
+                <CircularProgress sx={{ position: 'absolute', top: '45%', left: '50%' }}/> : 
+                <FlashCards onResponse={handleResponse} cards={data?.list} />}
             </div>
         </>
     )

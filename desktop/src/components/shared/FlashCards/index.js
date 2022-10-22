@@ -6,6 +6,7 @@ import { CardActionArea } from '@mui/material';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import { HOST } from '../../../constants';
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
@@ -57,7 +58,7 @@ export default function FlashCards(props) {
                     <CampaignIcon />
                 </IconButton>
                 <CardActionArea sx={{ height: '100%', width: '100%' }}>
-                {cardsState[current]?.imageUrl ? <CardMedia component="img" height="140" image={cardsState[current]?.imageUrl}/> : null}
+                {cardsState[current]?.imageUrl ? <CardMedia component="img" className={styles.image} height="200" image={`${HOST}${cardsState[current]?.imageUrl}`}/> : null}
                     <CardContent>
                         <Typography className={styles.cardText} gutterBottom variant="h5" component="div">
                             {cardsState[current]?.term || handleSkipCard()}
@@ -67,7 +68,7 @@ export default function FlashCards(props) {
             </Card>
             <Card className={cx(styles.flipCardBack, { [styles.rotate]: !isFlipped })}>
                 <CardActionArea sx={{ height: '100%', width: '100%' }}>
-                {cardsState[current]?.imageUrl ? <CardMedia component="img" height="140" image={cardsState[current]?.imageUrl}/> : null}
+                {cardsState[current]?.imageUrl ? <CardMedia component="img" className={styles.image} height="200" image={`${HOST}${cardsState[current]?.imageUrl}`}/> : null}
                     <CardContent>
                         <Typography className={styles.cardText} gutterBottom variant="h5" component="div">
                             {cardsState[current]?.definition || handleSkipCard()}
