@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 
-import ModulesTitle from '../components/modulesTitle';
+import ModulesTitle from '../features/modules/modulesTitle';
 import ModulesList from '../features/modules/modulesList';
-import CreateModuleBtn from '../components/CreateModuleBtn';
+import CreateModuleBtn from '../features/modules/CreateModuleBtn';
 
-import ModulePagination from './../components/ModulePagination';
+import ModulePagination from '../features/modules/ModulesPagination';
 
 const PersonalPage: FC = () => {
   return (

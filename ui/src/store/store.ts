@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import { userReducer } from '../features/user/userSlice';
 import { formReducer } from '../features/form/formSlice';
-import { moduleReducer } from '../features/modules/modulesSlice';
+import { modulesReducer } from '../features/modules/modulesSlice';
+import { moduleReducer } from '../features/module/moduleSlice';
 
 import * as api from './configAPI';
 
@@ -12,7 +13,8 @@ export const store = configureStore({
   reducer: {
     user: userReducer,
     form: formReducer,
-    modules: moduleReducer,
+    modules: modulesReducer,
+    module: moduleReducer,
   },
   devTools: true,
   middleware: (setDefaultMiddleware) =>

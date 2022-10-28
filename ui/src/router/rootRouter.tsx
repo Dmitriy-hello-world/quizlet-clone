@@ -31,7 +31,7 @@ const RootRouter: FC = () => {
           }
         />
         <Route
-          path="personal/:module"
+          path="personal/:id"
           element={
             <Suspense fallback={<Spinner style={spinnerStyled} />}>
               <ModulePage />

@@ -3,10 +3,10 @@ import { FC } from 'react';
 
 import { useSelector } from 'react-redux';
 
-import { openModal } from '../features/form/formSlice';
+import { openModal } from '../form/formSlice';
 
-import { getUserInfoSelector } from '../features/user/userSlice';
-import { useAppDispatch } from '../store/store';
+import { getUserInfoSelector } from '../user/userSlice';
+import { useAppDispatch } from '../../store/store';
 
 const CreateModuleBtn: FC = () => {
   const { isAuthorized } = useSelector(getUserInfoSelector);

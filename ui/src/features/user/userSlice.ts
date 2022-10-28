@@ -27,8 +27,8 @@ interface userInfoResp {
       createdAt: string;
       updatedAt: string;
     };
+    status: 1 | 0;
   };
-  status: 1 | 0;
 }
 
 const initialState: InitialState = {
@@ -55,7 +55,7 @@ export const loadUserInfo = createAsyncThunk<userInfoResp, string, { extra: { cl
         },
       });
 
-      if (response.status === 0) {
+      if (response.data.status === 0) {
         throw new Error('incorrect token!');
       }
 

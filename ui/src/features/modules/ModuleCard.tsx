@@ -2,14 +2,15 @@ import { FC } from 'react';
 import { Card, CardContent, Typography, CardActionArea } from '@mui/material';
 import { Link } from 'react-router-dom';
 
+import { ModuleType } from './modulesSlice';
+
 interface Props {
-  title: string;
-  description: string;
+  module: ModuleType;
 }
 
-const ModuleCard: FC<Props> = ({ title, description }) => {
+const ModuleCard: FC<Props> = ({ module: { name, description, id } }) => {
   return (
-    <Link to={`/personal/${title}`} style={{ textDecoration: 'none' }}>
+    <Link to={`/personal/${id}`} style={{ textDecoration: 'none' }}>
       <Card sx={{ width: 300, height: 150, overflow: 'hidden' }}>
         <CardActionArea>
           <CardContent>
@@ -19,7 +20,7 @@ const ModuleCard: FC<Props> = ({ title, description }) => {
               variant="h5"
               component="div"
             >
-              {title}
+              {name}
             </Typography>
             <Typography
               sx={{ textDecoration: 'none', height: '90px', overflow: 'hidden', lineHeight: '15px' }}

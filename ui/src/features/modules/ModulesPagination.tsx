@@ -2,11 +2,12 @@ import { Pagination } from '@mui/material';
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 
-import { getModuleInfo, loadModules } from '../features/modules/modulesSlice';
-import { getUserInfoSelector } from '../features/user/userSlice';
-import { useAppDispatch } from '../store/store';
+import { getUserInfoSelector } from '../user/userSlice';
+import { useAppDispatch } from '../../store/store';
 
-import { getToken } from './../utils/functions';
+import { getToken } from '../../utils/functions';
+
+import { getModuleInfo, loadModules } from './modulesSlice';
 
 const ModulePagination: FC = () => {
   const { totalCount, page } = useSelector(getModuleInfo);

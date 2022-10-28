@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axiosType, apiType, RootState } from '../../store/store';
 
-interface module {
+export interface ModuleType {
   createdAt: string;
   description: string;
   editedByOutsiders: boolean;
@@ -14,8 +14,8 @@ interface module {
 }
 
 interface InitialState {
-  modules: module[];
-  filteredModules: module[];
+  modules: ModuleType[];
+  filteredModules: ModuleType[];
   status: 'idle' | 'loading' | 'rejected' | 'received';
   totalCount: number;
   page: number;
@@ -31,7 +31,7 @@ interface AsyncParams {
 }
 export interface userModuleResp {
   data: {
-    data: module[];
+    data: ModuleType[];
     meta: {
       filteredCount: number;
     };
@@ -91,7 +91,7 @@ export const filterModulesByName = createAsyncThunk<userModuleResp, { name: stri
   }
 );
 
-const moduleSlice = createSlice({
+const modulesSlice = createSlice({
   name: '@@modules',
   initialState,
   reducers: {
@@ -118,9 +118,9 @@ const moduleSlice = createSlice({
   },
 });
 
-export const moduleReducer = moduleSlice.reducer;
+export const modulesReducer = modulesSlice.reducer;
 
-const { setPage } = moduleSlice.actions;
+const { setPage } = modulesSlice.actions;
 
 export const getModules = (state: RootState) => state.modules.modules;
 

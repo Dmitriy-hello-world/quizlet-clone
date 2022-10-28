@@ -23,9 +23,7 @@ const SearchList: FC<Props> = ({ searchValue, referWrapp, display, onSetDisplay 
 
   const closeList = (e: Event) => {
     if (referWrapp && e.target) {
-      if ((referWrapp.current as HTMLDivElement).contains(e.target as Node)) {
-        console.log('click on component');
-      } else {
+      if (!(referWrapp.current as HTMLDivElement).contains(e.target as Node)) {
         onSetDisplay('none');
       }
     }
@@ -58,7 +56,7 @@ const SearchList: FC<Props> = ({ searchValue, referWrapp, display, onSetDisplay 
       {modules.map((module) => {
         return (
           <ListItem key={module.id} disablePadding>
-            <Link to={`/personal/${module.name}`} style={{ color: 'white', width: '100%', textDecoration: 'none' }}>
+            <Link to={`/personal/${module.id}`} style={{ color: 'white', width: '100%', textDecoration: 'none' }}>
               <ListItemButton sx={{ textAlign: 'center' }}>
                 <ListItemText sx={{ overflow: 'hidden', whiteSpace: 'nowrap' }} primary={module.name} />
               </ListItemButton>

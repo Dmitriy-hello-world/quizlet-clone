@@ -34,7 +34,7 @@ const AccountInHeader: FC = () => {
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        {user.firstName !== null && isAuthorized ? (
+        {user?.firstName && isAuthorized ? (
           <Typography sx={{ minWidth: 100, m: '0 5px' }}>{user.firstName}</Typography>
         ) : (
           <Typography onClick={() => handleOpenModal('log')} sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
@@ -50,9 +50,7 @@ const AccountInHeader: FC = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>
-              {user.firstName !== null && isAuthorized ? user.firstName[0] : 'L'}
-            </Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user?.firstName && isAuthorized ? user.firstName[0] : 'L'}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -95,7 +93,7 @@ const AccountInHeader: FC = () => {
           ? [
               <MenuItem key="0">
                 <Avatar />{' '}
-                {user.firstName !== null && user.secondName !== null && isAuthorized
+                {user?.firstName && user.secondName !== null && isAuthorized
                   ? `${user.firstName} ${user.secondName}`
                   : 'profile'}
               </MenuItem>,

@@ -3,13 +3,13 @@ import { FC, useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 
-import Card from '../../components/Module';
-
 import { useAppDispatch } from '../../store/store';
 import { getToken } from '../../utils/functions';
 import { getUserInfoSelector } from '../user/userSlice';
 
 import { ReactComponent as Spinner } from '../../assets/svg/spinner.svg';
+
+import Card from './ModuleCard';
 
 import { getModuleInfo, getModules, loadModules } from './modulesSlice';
 
@@ -45,7 +45,7 @@ const ModuleList: FC = () => {
         </h2>
       )}
       {isAuthorized && status !== 'loading' && status !== 'rejected'
-        ? modules.map((module) => <Card key={module.id} title={module.name} description={module.description} />)
+        ? modules.map((module) => <Card key={module.id} module={module} />)
         : null}
     </Box>
   );
