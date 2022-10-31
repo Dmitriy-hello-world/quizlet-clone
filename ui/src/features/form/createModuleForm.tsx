@@ -73,7 +73,7 @@ const CreateModuleForm: FC = () => {
               <span>description:</span>
               <TextField
                 id="outlined-multiline-flexible"
-                label="Multiline"
+                label="Description"
                 multiline
                 maxRows={4}
                 fullWidth={true}

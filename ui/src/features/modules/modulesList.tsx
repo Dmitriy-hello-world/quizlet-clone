@@ -9,7 +9,7 @@ import { getUserInfoSelector } from '../user/userSlice';
 
 import { ReactComponent as Spinner } from '../../assets/svg/spinner.svg';
 
-import Card from './ModuleCard';
+import ModuleCard from './ModuleCard';
 
 import { getModuleInfo, getModules, loadModules } from './modulesSlice';
 
@@ -45,7 +45,7 @@ const ModuleList: FC = () => {
         </h2>
       )}
       {isAuthorized && status !== 'loading' && status !== 'rejected'
-        ? modules.map((module) => <Card key={module.id} module={module} />)
+        ? modules.map((module) => <ModuleCard key={module.id} module={module} />)
         : null}
     </Box>
   );

@@ -26,9 +26,16 @@ interface ModulePrms {
   token: string;
 }
 
+interface DeleteModulePrms {
+  id: string;
+  page: number;
+  token: string;
+}
+
 interface AsyncParams {
   extra: { client: axiosType; api: apiType };
 }
+
 export interface userModuleResp {
   data: {
     data: ModuleType[];
@@ -91,6 +98,44 @@ export const filterModulesByName = createAsyncThunk<userModuleResp, { name: stri
   }
 );
 
+export const deleteModule = createAsyncThunk<string, DeleteModulePrms, AsyncParams>(
+  '@@modules/delete-module',
+  async ({ id, page, token }, { rejectWithValue, dispatch, getState, extra: { client, api } }) => {
+    try {
+      const state = getState() as RootState;
+      const response: { data: { status: 0 | 1 } } = await client.delete(api.DELETE_MODULE_BY_ID(id), {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.data.status === 0) {
+        throw new Error('incorrect token!');
+      } else {
+        if (state.modules.modules.length - 1 <= 0) {
+          dispatch(
+            loadModules({
+              page: page - 1,
+              token,
+            })
+          );
+        } else if (state.modules.modules.length - 1 === 11) {
+          dispatch(
+            loadModules({
+              page,
+              token,
+            })
+          );
+        }
+      }
+
+      return id;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const modulesSlice = createSlice({
   name: '@@modules',
   initialState,
@@ -114,6 +159,9 @@ const modulesSlice = createSlice({
       })
       .addCase(filterModulesByName.fulfilled, (store, action) => {
         store.filteredModules = action.payload.data.data;
+      })
+      .addCase(deleteModule.fulfilled, (store, action) => {
+        store.modules = store.modules.filter((module) => module.id !== action.payload);
       });
   },
 });

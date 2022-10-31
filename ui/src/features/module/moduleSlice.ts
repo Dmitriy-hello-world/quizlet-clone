@@ -19,7 +19,6 @@ interface InitialState {
   status: 'idle' | 'loading' | 'rejected' | 'received';
   totalCount: number;
   moduleInfo: ModuleType;
-  currentPhoto: string;
 }
 
 interface ModulePrms {
@@ -40,7 +39,12 @@ interface UpdtModPrms {
 
 interface UploadImgType {
   token: string;
-  body: FormData;
+  body: {
+    img: FormData;
+    moduleId: string;
+    term: string;
+    definition: string;
+  };
 }
 
 interface AsyncParams {
@@ -118,7 +122,6 @@ const initialState: InitialState = {
     updatedAt: '',
     userId: '',
   },
-  currentPhoto: '',
 };
 
 export const loadWords = createAsyncThunk<ResponseTypes, ModulePrms, AsyncParams>(
@@ -186,11 +189,11 @@ export const updateModule = createAsyncThunk<RespForModule, UpdtModPrms, AsyncPa
   }
 );
 
-export const uploadImg = createAsyncThunk<RespForImg, UploadImgType, AsyncParams>(
-  '@@module/load-img',
+export const CreateWordWithImg = createAsyncThunk<RespForImg, UploadImgType, AsyncParams>(
+  '@@module/create-word-with-img',
   async ({ token, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
-      const response: RespForImg = await client.post(api.UPLOAD_IMG, body, {
+      const response: RespForImg = await client.post(api.UPLOAD_IMG, body.img, {
         headers: {
           Authorization: token,
         },
@@ -198,6 +201,18 @@ export const uploadImg = createAsyncThunk<RespForImg, UploadImgType, AsyncParams
 
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
+      } else {
+        dispatch(
+          createWord({
+            token,
+            body: {
+              moduleId: body.moduleId,
+              term: body.term,
+              definition: body.definition,
+              imageUrl: response.data.data.key,
+            },
+          })
+        );
       }
 
       return response;
@@ -231,11 +246,7 @@ export const createWord = createAsyncThunk<CreateWordResp, CreateWordPrms, Async
 const moduleSlice = createSlice({
   name: '@@module',
   initialState,
-  reducers: {
-    deleteCurrentPhoto: (store) => {
-      store.currentPhoto = '';
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loadWords.pending, (store) => {
@@ -252,22 +263,14 @@ const moduleSlice = createSlice({
       .addCase(loadModule.fulfilled, (store, action) => {
         store.moduleInfo = action.payload.data.data;
       })
-      .addCase(uploadImg.fulfilled, (store, action) => {
-        store.currentPhoto = action.payload.data.data.key;
-      })
       .addCase(createWord.fulfilled, (store, action) => {
-        store.currentPhoto = '';
         store.words = [action.payload.data.data, ...store.words];
       });
   },
 });
-
-export const { deleteCurrentPhoto } = moduleSlice.actions;
 
 export const moduleReducer = moduleSlice.reducer;
 
 export const getWords = (state: RootState) => state.module.words;
 
 export const getModule = (state: RootState) => state.module.moduleInfo;
-
-export const getCurrentUrl = (state: RootState) => state.module.currentPhoto;

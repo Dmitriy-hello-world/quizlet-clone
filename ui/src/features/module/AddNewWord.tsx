@@ -9,9 +9,7 @@ import { useAppDispatch } from '../../store/store';
 import { getToken } from '../../utils/functions';
 import { getUserInfoSelector } from '../user/userSlice';
 
-import { SERVER_URL } from '../../store/configAPI';
-
-import { uploadImg, getCurrentUrl, deleteCurrentPhoto, createWord } from './moduleSlice';
+import { CreateWordWithImg, createWord } from './moduleSlice';
 
 interface Props {
   id: string;
@@ -21,44 +19,56 @@ const AddNewWord: FC<Props> = ({ id }) => {
   const [term, setTerm] = useState('');
   const [definition, setDefinition] = useState('');
   const [photoToggle, setPhotoToggle] = useState(false);
+  const [file, setFile] = useState<File>();
   const { isAuthorized } = useSelector(getUserInfoSelector);
-  const currentPhoto = useSelector(getCurrentUrl);
   const dispatch = useAppDispatch();
   const token = getToken();
 
   const onHandleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement;
-
     if (!input.files?.length) {
       return;
     }
 
-    const formData = new FormData();
-
-    formData.append('avatar', input.files[0]);
-
     if (token) {
-      dispatch(uploadImg({ token, body: formData }));
+      setFile(input.files[0]);
       setPhotoToggle(true);
     }
   };
 
   const onHandleSubmit = () => {
     if (token) {
+      if (file) {
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        dispatch(
+          CreateWordWithImg({
+            token,
+            body: {
+              img: formData,
+              moduleId: id,
+              term,
+              definition,
+            },
+          })
+        );
+      } else {
+        dispatch(
+          createWord({
+            token,
+            body: {
+              moduleId: id,
+              term,
+              definition,
+              imageUrl: '',
+            },
+          })
+        );
+      }
       setPhotoToggle(false);
       setTerm('');
       setDefinition('');
-      dispatch(
-        createWord({
-          token,
-          body: {
-            moduleId: id,
-            term,
-            definition,
-            imageUrl: currentPhoto,
-          },
-        })
-      );
     }
   };
 
@@ -93,12 +103,12 @@ const AddNewWord: FC<Props> = ({ id }) => {
                 component="label"
               >
                 <input onChange={(e) => onHandleChange(e)} hidden accept="image/*" type="file" />
-                {!photoToggle ? <PhotoCamera /> : <Avatar alt="word cover" src={SERVER_URL + currentPhoto} />}
+                {photoToggle && file ? <Avatar alt="word cover" src={URL.createObjectURL(file)} /> : <PhotoCamera />}
               </IconButton>
               {photoToggle && (
                 <ClearIcon
                   onClick={() => {
-                    dispatch(deleteCurrentPhoto());
+                    setFile(undefined);
                     setPhotoToggle(false);
                   }}
                   sx={{ width: '20px', height: '20px', cursor: 'pointer' }}
