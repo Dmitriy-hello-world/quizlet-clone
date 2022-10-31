@@ -5,8 +5,11 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 import { useAppDispatch } from '../../store/store';
+import { openModal } from '../form/formSlice';
 
-import { loadUser, getUserInfoSelector } from './userSlice';
+import { getToken } from '../../utils/functions';
+
+import { getUserInfoSelector, loadUserInfo, logOutUser } from './userSlice';
 
 const AccountInHeader: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -18,22 +21,27 @@ const AccountInHeader: FC = () => {
     setAnchorEl(null);
   };
   const dispatch = useAppDispatch();
-  const { user, status, error } = useSelector(getUserInfoSelector);
+  const { user, isAuthorized } = useSelector(getUserInfoSelector);
+  const handleOpenModal = (type: 'log' | 'reg') => dispatch(openModal(type));
 
-  const callUseEffectOnce = useRef(true);
   useEffect(() => {
-    if (callUseEffectOnce.current) {
-      callUseEffectOnce.current = false;
-      dispatch(loadUser());
+    const token = getToken();
+    if (token && token !== null) {
+      dispatch(loadUserInfo(token));
     }
   }, [dispatch]);
 
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
-        <Tooltip title="Account settings">
+        {user?.firstName && isAuthorized ? (
+          <Typography sx={{ minWidth: 100, m: '0 5px' }}>{user.firstName}</Typography>
+        ) : (
+          <Typography onClick={() => handleOpenModal('log')} sx={{ minWidth: 100, cursor: 'pointer', m: '0 5px' }}>
+            Log In
+          </Typography>
+        )}
+        <Tooltip title="Account">
           <IconButton
             onClick={handleClick}
             size="small"
@@ -42,7 +50,7 @@ const AccountInHeader: FC = () => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user?.firstName && isAuthorized ? user.firstName[0] : 'L'}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -81,22 +89,42 @@ const AccountInHeader: FC = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
-          <Avatar /> Profile
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
+        {isAuthorized
+          ? [
+              <MenuItem key="0">
+                <Avatar />{' '}
+                {user?.firstName && user.secondName !== null && isAuthorized
+                  ? `${user.firstName} ${user.secondName}`
+                  : 'profile'}
+              </MenuItem>,
+              <Divider key="1" />,
+              <MenuItem key="2">
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Settings
+              </MenuItem>,
+              <MenuItem
+                key="3"
+                onClick={() => {
+                  dispatch(logOutUser());
+                  localStorage.removeItem('token');
+                }}
+              >
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>,
+            ]
+          : [
+              <MenuItem key="4" onClick={() => handleOpenModal('log')}>
+                Log in
+              </MenuItem>,
+              <MenuItem key="5" onClick={() => handleOpenModal('reg')}>
+                Registration
+              </MenuItem>,
+            ]}
       </Menu>
     </Fragment>
   );
