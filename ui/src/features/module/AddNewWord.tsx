@@ -9,7 +9,7 @@ import { useAppDispatch } from '../../store/store';
 import { getToken } from '../../utils/functions';
 import { getUserInfoSelector } from '../user/userSlice';
 
-import { CreateWordWithImg, createWord } from './moduleSlice';
+import { CreateWordWithImg, createWord, getWordsInfo } from './moduleSlice';
 
 interface Props {
   id: string;
@@ -21,6 +21,7 @@ const AddNewWord: FC<Props> = ({ id }) => {
   const [photoToggle, setPhotoToggle] = useState(false);
   const [file, setFile] = useState<File>();
   const { isAuthorized } = useSelector(getUserInfoSelector);
+  const { page } = useSelector(getWordsInfo);
   const dispatch = useAppDispatch();
   const token = getToken();
 
@@ -45,6 +46,8 @@ const AddNewWord: FC<Props> = ({ id }) => {
         dispatch(
           CreateWordWithImg({
             token,
+            id,
+            page,
             body: {
               img: formData,
               moduleId: id,
@@ -57,6 +60,8 @@ const AddNewWord: FC<Props> = ({ id }) => {
         dispatch(
           createWord({
             token,
+            id,
+            page,
             body: {
               moduleId: id,
               term,
@@ -66,6 +71,7 @@ const AddNewWord: FC<Props> = ({ id }) => {
           })
         );
       }
+      setFile(undefined);
       setPhotoToggle(false);
       setTerm('');
       setDefinition('');

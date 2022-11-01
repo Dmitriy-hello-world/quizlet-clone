@@ -35,10 +35,23 @@ const WordsList: FC<Props> = ({ words }) => {
 export default WordsList;
 
 const ListStyled = {
+  height: '650px',
   marginTop: '50px',
   display: 'flex',
   flexDirection: 'column',
   gap: '20px',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
+  overflowY: 'scroll',
+  '::-webkit-scrollbar': {
+    width: '4px',
+  },
+  '::-webkit-scrollbar-track': {
+    boxShadow: 'inset 0 0 5px grey',
+    borderRadius: '10px',
+  },
+  '::-webkit-scrollbar-thumb': {
+    background: '#304278',
+    borderRadius: '10px',
+  },
 };

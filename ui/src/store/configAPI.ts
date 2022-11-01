@@ -25,6 +25,9 @@ export const UPDATE_MODULE_BY_ID = (id: string) => BASE_URL + `/modules/${id}`;
 
 export const GET_MODULES_WITH_PAGINATION = (num: number) => `${GET_ALL_MODULES}?offset=${(num - 1) * 12}&limit=12`;
 
+export const GET_WORDS_WITH_PAGINATION = (id: string, num: number) =>
+  BASE_URL + `/words?moduleId=${id}&offset=${(num - 1) * 8}&limit=8`;
+
 export const GET_MODULES_BY_NAME = (name: string) => `${GET_ALL_MODULES}?search=${name}`;
 
 export const DELETE_MODULE_BY_ID = (id: string) => BASE_URL + `/modules/${id}`;

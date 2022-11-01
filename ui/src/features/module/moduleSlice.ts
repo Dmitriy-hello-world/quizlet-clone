@@ -19,10 +19,17 @@ interface InitialState {
   status: 'idle' | 'loading' | 'rejected' | 'received';
   totalCount: number;
   moduleInfo: ModuleType;
+  page: number;
 }
 
 interface ModulePrms {
   id: string;
+  token: string;
+}
+
+interface WordsPrms {
+  id: string;
+  page: number;
   token: string;
 }
 
@@ -39,6 +46,8 @@ interface UpdtModPrms {
 
 interface UploadImgType {
   token: string;
+  page: number;
+  id: string;
   body: {
     img: FormData;
     moduleId: string;
@@ -84,6 +93,8 @@ interface RespForImg {
 
 interface CreateWordPrms {
   token: string;
+  page: number;
+  id: string;
   body: {
     moduleId: string;
     term: string;
@@ -122,13 +133,14 @@ const initialState: InitialState = {
     updatedAt: '',
     userId: '',
   },
+  page: 1,
 };
 
-export const loadWords = createAsyncThunk<ResponseTypes, ModulePrms, AsyncParams>(
+export const loadWords = createAsyncThunk<ResponseTypes, WordsPrms, AsyncParams>(
   '@@module/load-words',
-  async ({ id, token }, { rejectWithValue, extra: { client, api } }) => {
+  async ({ id, page, token }, { dispatch, rejectWithValue, extra: { client, api } }) => {
     try {
-      const response: ResponseTypes = await client.get(api.GET_WORDS_BY_ID(id), {
+      const response: ResponseTypes = await client.get(api.GET_WORDS_WITH_PAGINATION(id, page), {
         headers: {
           Authorization: token,
         },
@@ -136,6 +148,8 @@ export const loadWords = createAsyncThunk<ResponseTypes, ModulePrms, AsyncParams
 
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
+      } else {
+        dispatch(setPage(page));
       }
 
       return response;
@@ -191,7 +205,7 @@ export const updateModule = createAsyncThunk<RespForModule, UpdtModPrms, AsyncPa
 
 export const CreateWordWithImg = createAsyncThunk<RespForImg, UploadImgType, AsyncParams>(
   '@@module/create-word-with-img',
-  async ({ token, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
+  async ({ token, id, page, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: RespForImg = await client.post(api.UPLOAD_IMG, body.img, {
         headers: {
@@ -205,6 +219,8 @@ export const CreateWordWithImg = createAsyncThunk<RespForImg, UploadImgType, Asy
         dispatch(
           createWord({
             token,
+            id,
+            page: 1,
             body: {
               moduleId: body.moduleId,
               term: body.term,
@@ -224,7 +240,7 @@ export const CreateWordWithImg = createAsyncThunk<RespForImg, UploadImgType, Asy
 
 export const createWord = createAsyncThunk<CreateWordResp, CreateWordPrms, AsyncParams>(
   '@@module/create-word',
-  async ({ token, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
+  async ({ token, id, page, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: CreateWordResp = await client.post(api.CREATE_WORD, body, {
         headers: {
@@ -234,6 +250,8 @@ export const createWord = createAsyncThunk<CreateWordResp, CreateWordPrms, Async
 
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
+      } else {
+        dispatch(loadWords({ token, id, page: 1 }));
       }
 
       return response;
@@ -246,7 +264,11 @@ export const createWord = createAsyncThunk<CreateWordResp, CreateWordPrms, Async
 const moduleSlice = createSlice({
   name: '@@module',
   initialState,
-  reducers: {},
+  reducers: {
+    setPage: (store, action) => {
+      store.page = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadWords.pending, (store) => {
@@ -271,6 +293,13 @@ const moduleSlice = createSlice({
 
 export const moduleReducer = moduleSlice.reducer;
 
+const { setPage } = moduleSlice.actions;
+
 export const getWords = (state: RootState) => state.module.words;
 
 export const getModule = (state: RootState) => state.module.moduleInfo;
+
+export const getWordsInfo = (state: RootState) => ({
+  totalCount: state.module.totalCount,
+  page: state.module.page,
+});

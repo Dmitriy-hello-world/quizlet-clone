@@ -14,6 +14,8 @@ import AddNewWord from '../features/module/AddNewWord';
 
 import WordsList from '../features/module/wordsList';
 
+import WordsPagination from '../features/module/modulePagination';
+
 import { getToken } from './../utils/functions';
 
 const ModulePage: FC = () => {
@@ -25,7 +27,7 @@ const ModulePage: FC = () => {
 
   useEffect(() => {
     if (token) {
-      dispatch(loadWords({ id, token }));
+      dispatch(loadWords({ id, page: 1, token }));
       dispatch(loadModule({ id, token }));
     }
   }, [id]);
@@ -36,6 +38,7 @@ const ModulePage: FC = () => {
       <GamesBtns />
       <WordsList words={words} />
       <AddNewWord id={id} />
+      <WordsPagination id={id} />
     </Box>
   );
 };
