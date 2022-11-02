@@ -46,7 +46,6 @@ interface UpdtModPrms {
 
 interface UploadImgType {
   token: string;
-  page: number;
   id: string;
   body: {
     img: FormData;
@@ -117,6 +116,13 @@ interface CreateWordResp {
     };
     status: 0 | 1;
   };
+}
+
+interface DeleteModulePrms {
+  id: string;
+  page: number;
+  token: string;
+  moduleId: string;
 }
 
 const initialState: InitialState = {
@@ -205,13 +211,15 @@ export const updateModule = createAsyncThunk<RespForModule, UpdtModPrms, AsyncPa
 
 export const CreateWordWithImg = createAsyncThunk<RespForImg, UploadImgType, AsyncParams>(
   '@@module/create-word-with-img',
-  async ({ token, id, page, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
+  async ({ token, id, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
     try {
       const response: RespForImg = await client.post(api.UPLOAD_IMG, body.img, {
         headers: {
           Authorization: token,
         },
       });
+
+      console.log(response);
 
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
@@ -261,6 +269,46 @@ export const createWord = createAsyncThunk<CreateWordResp, CreateWordPrms, Async
   }
 );
 
+export const deleteWord = createAsyncThunk<string, DeleteModulePrms, AsyncParams>(
+  '@@module/delete-word',
+  async ({ id, moduleId, page, token }, { rejectWithValue, dispatch, getState, extra: { client, api } }) => {
+    try {
+      const state = getState() as RootState;
+      const response: { data: { status: 0 | 1 } } = await client.delete(api.DELETE_WORD_BY_ID(id), {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.data.status === 0) {
+        throw new Error('incorrect token!');
+      } else {
+        if (state.module.words.length - 1 <= 0 && page !== 1) {
+          dispatch(
+            loadWords({
+              id: moduleId,
+              page: page - 1,
+              token,
+            })
+          );
+        } else if (state.module.words.length - 1 === 7) {
+          dispatch(
+            loadWords({
+              id: moduleId,
+              page,
+              token,
+            })
+          );
+        }
+      }
+
+      return id;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const moduleSlice = createSlice({
   name: '@@module',
   initialState,
@@ -287,6 +335,9 @@ const moduleSlice = createSlice({
       })
       .addCase(createWord.fulfilled, (store, action) => {
         store.words = [action.payload.data.data, ...store.words];
+      })
+      .addCase(deleteWord.fulfilled, (store, action) => {
+        store.words = store.words.filter((word) => word.id !== action.payload);
       });
   },
 });

@@ -112,7 +112,7 @@ export const deleteModule = createAsyncThunk<string, DeleteModulePrms, AsyncPara
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
       } else {
-        if (state.modules.modules.length - 1 <= 0) {
+        if (state.modules.modules.length - 1 <= 0 && page !== 1) {
           dispatch(
             loadModules({
               page: page - 1,

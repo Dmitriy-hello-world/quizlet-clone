@@ -47,7 +47,6 @@ const AddNewWord: FC<Props> = ({ id }) => {
           CreateWordWithImg({
             token,
             id,
-            page,
             body: {
               img: formData,
               moduleId: id,

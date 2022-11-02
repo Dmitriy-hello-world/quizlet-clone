@@ -44,7 +44,7 @@ const Header: FC = () => {
             }}
           >
             <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
-              QUIZLET
+              HC
             </Link>
           </Typography>
 
