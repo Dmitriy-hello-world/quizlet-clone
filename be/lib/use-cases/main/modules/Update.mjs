@@ -9,11 +9,11 @@ import DMX          from '../../../domain-model/X.mjs';
 
 export default class ModulesUpdate extends Base {
     static validationRules = {
-        id                : [ 'required', 'uuid' ],
-        name              : [ 'string', { 'max_length': 255 } ],
-        description       : [ 'string' ],
-        private           : [ 'boolean' ],
-        editedByOutsiders : [ 'boolean' ]
+        id              : [ 'required', 'uuid' ],
+        name            : [ 'string', { 'max_length': 255 } ],
+        description     : [ 'string' ],
+        private         : [ 'boolean' ],
+        editByOutsiders : [ 'boolean' ]
     };
 
     async execute({ id, ...data }) {

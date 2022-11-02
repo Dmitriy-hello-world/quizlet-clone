@@ -6,10 +6,12 @@ import { modulesApi } from '../services/modules'
 import { wordsApi } from '../services/words'
 import { imagesApi } from '../services/images'
 import sessionSlice from '../features/sessions/sessionSlice'
+import userSlice from '../features/users/userSlice'
 
 export const store = configureStore({
   reducer: {
     sessions: sessionSlice,
+    users: userSlice,
     [sessionsApi.reducerPath]: sessionsApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [modulesApi.reducerPath]: modulesApi.reducer,

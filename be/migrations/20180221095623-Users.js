@@ -10,6 +10,7 @@ module.exports = {
             secondName   : { type: Sequelize.STRING, defaultValue: '' },
             avatar       : { type: Sequelize.STRING, defaultValue: '' },
             passwordHash : { type: Sequelize.STRING },
+            lang         : { type: Sequelize.STRING, defaultValue: 'en' },
             salt         : { type: Sequelize.STRING },
             createdAt    : { type: Sequelize.DATE, allowNull: false },
             updatedAt    : { type: Sequelize.DATE, allowNull: false }

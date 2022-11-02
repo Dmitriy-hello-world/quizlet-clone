@@ -10,7 +10,7 @@ import { store } from './store'
 const LoginPage = lazy(async () => await import('./components/pages/Login'));
 const ModulesPage = lazy(async () => await import('./components/pages/Modules'));
 const ModulePage = lazy(async () => await import('./components/pages/Module'));
-const CardsGame = lazy(async () => await import('./components/pages/Cards'));
+const Games = lazy(async () => await import('./components/pages/Games'));
 
 function App() {
   const routes = [
@@ -29,8 +29,8 @@ function App() {
       private: true
     },
     {
-      path: 'cards/:id',
-      element: <CardsGame/>,
+      path: 'games/:type/:id',
+      element: <Games/>,
       private: true
     }
   ]

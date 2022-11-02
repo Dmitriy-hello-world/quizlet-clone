@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import List from '@mui/material/List';
 import EditIcon from '@mui/icons-material/Edit';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import FolderIcon from '@mui/icons-material/Folder';
+import PhotoIcon from '@mui/icons-material/Photo';
 import Avatar from '@mui/material/Avatar';
 import { IconButton } from "@mui/material";
 import { HOST } from '../../../constants';
@@ -13,13 +13,17 @@ import PropTypes from 'prop-types';
 import styles from './styles.scss';
 
 export default function WordsList(props) {
-    const { words, handleDelete, handleUpdate } = props;
+    const { words, handleDelete, setOffset, handleUpdate } = props;
+
+    const handleLazyLoadin = ({ target }) => {
+      if ((target.scrollHeight - target.scrollTop) < target.clientHeight) setOffset(prev => prev + 1)
+    }
 
     return (
-        <List className={styles.listBlock}>
+        <List className={styles.listBlock} onScroll={handleLazyLoadin}>
             {words?.map(word => (
                 <ListItem
-                  key={word.id}
+                  key={word?.id}
                   secondaryAction={
                     <>
                       <IconButton sx={{ marginRight: 1 }} onClick={() => handleUpdate(word)} edge="end" aria-label="delete">
@@ -33,7 +37,7 @@ export default function WordsList(props) {
               >
                 <ListItemAvatar>
                   <Avatar>
-                    {word?.imageUrl ? <img className={styles.image} src={`${HOST}${word?.imageUrl}`}/> : <FolderIcon />}
+                    {word?.imageUrl ? <img className={styles.image} src={`${HOST}${word?.imageUrl}`}/> : <PhotoIcon />}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText

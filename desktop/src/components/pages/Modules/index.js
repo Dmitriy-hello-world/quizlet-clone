@@ -14,7 +14,6 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from './styles.scss'
 
-
 export default function Modules(props) {
     const [ deleteModule ] = useDeleteModuleMutation();
     const [ createModule ] = useCreateModuleMutation();
@@ -39,7 +38,10 @@ export default function Modules(props) {
         })
     }, [ search, currentPage ])
 
-    const { data, isLoading, isError, refetch } = useGetModulesQuery(query);
+    const { data, isLoading, refetch } = useGetModulesQuery(query, {
+        refetchOnMountOrArgChange : true,
+        refetchOnReconnect: true
+    });
 
     const actions = {
         Create: async (payload) => {
@@ -114,10 +116,17 @@ export default function Modules(props) {
 
     const handlePageClick = ({ selected }) => setCurrentPage(selected)
 
+    const handleCloseModal = () => {
+        setOpen(false)
+        setTabs({
+            Create: CREATE_MODULE_TABS,
+            Update: CREATE_MODULE_TABS
+        })
+    }
+
     const handleSearch = (event) => setSearch(event.target.value)
 
     const handleClearSearch = () => setSearch('');
-
 
     if (isLoading) return <CircularProgress sx={{ position: 'absolute', top: '45%', left: '50%' }}/>
 
@@ -129,7 +138,7 @@ export default function Modules(props) {
             hideTabs 
             injectFields = {injectFields} 
             onSend       = {onSend} 
-            onClose      = {() => setOpen(false)} 
+            onClose      = {handleCloseModal} 
             tabs         = {tabs} 
             defaultTab   = {tab} 
         />

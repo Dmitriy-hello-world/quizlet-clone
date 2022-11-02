@@ -3,7 +3,6 @@ import { DataTypes as DT } from '../../packages.mjs';
 
 import Base                from './Base.mjs';
 import Module              from './Module.mjs';
-import { InactiveObject }  from './X.mjs';
 
 const SALT_LENGTH = 16;
 const KEY_LENGTH  = 64;
@@ -17,6 +16,7 @@ class User extends Base {
         avatar       : { type: DT.STRING, defaultValue: '' },
         passwordHash : { type: DT.STRING },
         salt         : { type: DT.STRING },
+        lang         : { type: DT.STRING, defaultValue: 'en' },
         password     : { type : DT.VIRTUAL,
             set(password) {
                 const salt = this._generateSalt();
@@ -28,6 +28,23 @@ class User extends Base {
 
     static initRelations() {
         this.hasMany(Module, { foreignKey: 'userId', onDelete: 'CASCADE', as: 'modules' });
+    }
+
+    static initHooks() {
+        this.afterDestroy(async (user) => {
+            if (!user?.avatar) return;
+            const file = user?.avatar?.replace(`${BucketName}/`, '');
+
+            await minioClient.deleteAsync(BucketName, file);
+        });
+
+        this.afterUpdate(async (user) => {
+            if (user._previousDataValues.avatar && user.dataValues.avatar !== user._previousDataValues.avatar) {
+                const file = user._previousDataValues.avatar?.replace(`${BucketName}/`, '');
+
+                await minioClient.deleteAsync(BucketName, file);
+            }
+        })
     }
 
     /**

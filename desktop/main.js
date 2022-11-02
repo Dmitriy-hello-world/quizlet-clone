@@ -42,8 +42,8 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
 
-ipcMain.on('translate', async (event, value) => {
-  if (value?.length) return event.reply('translated', await translate(value, { to: 'ru' }))
+ipcMain.on('translate', async (event, { value, lang }) => {
+  if (value?.length) return event.reply('translated', await translate(value, { to: lang || 'en' }))
 })
 
 ipcMain.on('say', (_, word) => say.speak(word))

@@ -1,9 +1,9 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import Button from '@mui/material/Button';
+import { CardActionArea, TextField, InputAdornment } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import { HOST } from '../../../constants';
 import React, { useState, useEffect } from 'react'
@@ -11,24 +11,49 @@ import PropTypes from 'prop-types'
 import cx from 'classnames'
 import styles from './styles.scss'
 
-export default function FlashCards(props) {
+export default function InputCards(props) {
     const { cards, onResponse = () => {}, offset, setOffset } = props
     const [ current, setCurrent ] = useState(0)
     const [ cardsState, setCardsState ] = useState(cards);
     const [ makeFetch, setMakeFetch ] = useState(true);
+    const [ value, setValue ] = useState('');
+    const [ color, setColor ] = useState('')
     const [ refreshKey, setRefresh ] = useState(new Date())
     const [ isFlipped, setFlipped ] = useState(false);
 
+
+    const handleKeydown = (event) => {
+        switch(event.key) {
+            case 'Enter': {
+                handleResponse()
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
     const handleSkipCard = () => setCurrent(prev => (prev + 1) > (cardsState?.length - 1) ? 0 : prev + 1)
 
-    const handleResponse = (result) => {
-        setFlipped(false)
+    const checkValue = () => {
+        return value.trim().toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '') === cardsState[current]?.term.trim().toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '')
+    }
+
+    const handleResponse = () => {
+        setFlipped(true);
+        const result = checkValue()
+        result ? setColor('success') : setColor('error');
         onResponse({ id: cardsState[current]?.id, response: result });
 
-        if (result) setCardsState(prev => prev.filter(({ id }) => id !== prev[current]?.id))
-        else handleSkipCard()
-
-        return setRefresh(new Date());
+        return setTimeout(() => {
+            if (result) setCardsState(prev => prev.filter(({ id }) => id !== prev[current]?.id))
+            else handleSkipCard()
+            setFlipped(false)
+            setColor('');
+            setValue('')
+            return setRefresh(new Date());
+        }, 3000)
     }
 
     useEffect(() => {
@@ -44,10 +69,18 @@ export default function FlashCards(props) {
         })
     }, [ cards ])
 
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeydown);
+
+        return () => document.removeEventListener('keydown', handleKeydown);
+    }, [ value, cardsState, current ])
+
     const handleCampaignClick = (event) => {
         event.stopPropagation()
         return window.electron.send('say', cardsState[current]?.term)
     }
+
+    const handleInput = ({ target }) => setValue(target.value)
 
     if (cardsState?.length === 0) return (
         <div className={styles.cardsBlock}>
@@ -59,8 +92,24 @@ export default function FlashCards(props) {
 
     return (
         <div className={styles.cardsBlock}>
-        <div key={refreshKey} className={styles.flipCard} onClick={() => setFlipped(prev => !prev)}>
+        <div key={refreshKey} className={styles.flipCard}>
             <Card className={cx(styles.flipCardFront, { [styles.rotate]: isFlipped })}>
+                <CardActionArea sx={{ height: '100%', width: '100%' }}>
+                {cardsState[current]?.imageUrl ? <div className={styles.image} style={{ background: `url(${HOST}${cardsState[current]?.imageUrl})` }}/> : null}
+                    <CardContent>
+                        <Typography 
+                            { ...!cardsState[current]?.imageUrl ? { style: { maxHeight: 300 } } : {} }
+                            className={styles.cardText} 
+                            gutterBottom 
+                            variant="h5" 
+                            component="div"
+                        >
+                            {cardsState[current]?.definition || handleSkipCard()}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+            <Card className={cx(styles.flipCardBack, { [styles.rotate]: !isFlipped })}>
                 <IconButton color="primary" className={styles.campaign} onClick={handleCampaignClick} component="label">
                     <CampaignIcon />
                 </IconButton>
@@ -79,32 +128,20 @@ export default function FlashCards(props) {
                     </CardContent>
                 </CardActionArea>
             </Card>
-            <Card className={cx(styles.flipCardBack, { [styles.rotate]: !isFlipped })}>
-                <CardActionArea sx={{ height: '100%', width: '100%' }}>
-                {cardsState[current]?.imageUrl ? <div className={styles.image} style={{ background: `url(${HOST}${cardsState[current]?.imageUrl})` }}/> : null}
-                    <CardContent>
-                        <Typography 
-                            { ...!cardsState[current]?.imageUrl ? { style: { maxHeight: 300 } } : {} }
-                            className={styles.cardText} 
-                            gutterBottom 
-                            variant="h5" 
-                            component="div"
-                        >
-                            {cardsState[current]?.definition || handleSkipCard()}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
         </div>
-        <div className={cx(styles.buttonBlock, { [styles.fade]: isFlipped })}>
-            <Button variant="contained" onClick={() => handleResponse(false)} color="error">Wrong</Button>
-            <Button variant="contained" onClick={() => handleResponse(true)} color="success">Right</Button>
-        </div>
+            <TextField fullWidth sx={{ marginTop: 5 }} color={color} focused value={value} onChange={handleInput} label="Response" InputProps={{
+                endAdornment: 
+                <InputAdornment position="end">
+                    <IconButton aria-label="delete" size="large" onClick={handleResponse} color="primary">
+                        <SendIcon />
+                    </IconButton>
+                </InputAdornment>,
+            }} />
         </div>     
     )
 }
 
-FlashCards.propTypes = {
+InputCards.propTypes = {
     cards      : PropTypes.array.isRequired,
     onResponse : PropTypes.func.isRequired
 }

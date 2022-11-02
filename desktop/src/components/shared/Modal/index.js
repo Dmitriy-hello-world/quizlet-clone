@@ -5,9 +5,11 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { IconButton } from '@mui/material'
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import PropTypes from 'prop-types'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import UploadImage from '../UploadImage'
 import React, { useState, useEffect } from 'react'
 import styles from './styles.scss'
@@ -32,10 +34,10 @@ export default function Modal(props) {
     }
 
   useEffect(() => {
-      document.addEventListener('keydown', handleKeydown);
+      if (isOpen) document.addEventListener('keydown', handleKeydown);
 
       return () => document.removeEventListener('keydown', handleKeydown)
-  }, [ formData, injectFields, currentTab ])
+  }, [ formData, isOpen, injectFields, currentTab ])
 
   const fieldTypes = {
     string: (field) => (
@@ -48,8 +50,8 @@ export default function Modal(props) {
             [event.target.name]: event.target.value,
           }))
         }
-        id="outlined-basic"
         {...field}
+        id="outlined-basic"
         value={formData?.[field.name] || ''}
         variant="outlined"
       />
@@ -77,6 +79,24 @@ export default function Modal(props) {
         } 
         label={field?.label} 
       />
+    ),
+    select: (field) => (
+      <FormControl key={field.name} sx={{ marginBottom: 2 }} fullWidth>
+        <InputLabel id={field.name}>{field?.label}</InputLabel>
+        <Select
+          {...field}
+          labelId={field.name}
+          id={field.name}
+          value={formData?.[field.name] || ''}
+          label={field?.label}
+          onChange={(event) => setFormData((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+          }))}
+        >
+          {field?.values.map(([value, label]) => <MenuItem key={value} value={value}>{label}</MenuItem>)}
+        </Select>
+      </FormControl>
     )
   }
 
@@ -97,7 +117,7 @@ export default function Modal(props) {
         </Box>
       </DialogTitle>
       <Box className={styles.FieldsBox} component="form">
-        {tabs[currentTab].map((field) => fieldTypes[field?.type || 'string'](field))}
+        {tabs[currentTab].map(({ typeField, ...field }) => fieldTypes[typeField || 'string'](field))}
       </Box>
       <Button onClick={() => onSend({ ...formData, ...injectFields }, currentTab)} className={styles.sendButton} variant="contained">
         Send
