@@ -5,6 +5,7 @@ import { TOKEN } from '../../constants'
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGetProfileQuery } from '../../services/users'
 import { logout } from '../../features/sessions/sessionSlice'
+import { setUser } from '../../features/users/userSlice';
 import { useSelector, useDispatch } from 'react-redux'
 
 export default function SmartRoute(props) {
@@ -13,13 +14,14 @@ export default function SmartRoute(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthorized = useSelector((state) => state.sessions.userAuthorized)
-  const { data, isError, refetch } = useGetProfileQuery();
+  const { data, isLoading, isError, refetch } = useGetProfileQuery();
 
   useEffect(() => {
     refetch()
   }, [ location.pathname ])
 
   useEffect(() => {
+    dispatch(setUser(data))
     if (isAuthorized && (data?.error?.code === 'WRONG_TOKEN' || isError)) {
       localStorage.removeItem(TOKEN)
       dispatch(logout())

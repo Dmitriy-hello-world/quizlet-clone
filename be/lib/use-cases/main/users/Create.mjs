@@ -10,8 +10,9 @@ import DMX          from '../../../domain-model/X.mjs';
 export default class UsersCreate extends Base {
     static validationRules = {
         email           : [ 'required', 'email', { 'max_length': 255 }, 'to_lc' ],
-        password        : [ 'required', 'string' ],
+        password        : [ 'required', 'string', { 'min_length': 8 } ],
         confirmPassword : [ 'required', { 'equal_to_field': [ 'password' ] } ],
+        lang            : [ 'string', { 'max_length': 6 } ],
         firstName       : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
         secondName      : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
         avatar          : [ 'string', { 'min_length': 2 }, { 'max_length': 150 } ]

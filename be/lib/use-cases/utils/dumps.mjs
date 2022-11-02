@@ -6,6 +6,7 @@ export function dumpUser(user) {
         email      : user.email,
         firstName  : user.firstName,
         secondName : user.secondName,
+        lang       : user?.lang,
         avatarUrl  : user.avatar ? generateImagesURL(user.avatar) : '',
         createdAt  : user.createdAt.toISOString(),
         updatedAt  : user.updatedAt.toISOString()

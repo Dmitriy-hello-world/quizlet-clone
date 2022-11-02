@@ -9,10 +9,10 @@ import DMX          from '../../../domain-model/X.mjs';
 
 export default class ModulesCreate extends Base {
     static validationRules = {
-        name              : [ 'required', 'string', { 'max_length': 255 } ],
-        description       : [ 'string' ],
-        private           : [ 'boolean', { 'default': true }  ],
-        editedByOutsiders : [ 'boolean', { 'default': false }  ]
+        name            : [ 'required', 'string', { 'max_length': 255 } ],
+        description     : [ 'string' ],
+        private         : [ 'boolean', { 'default': true }  ],
+        editByOutsiders : [ 'boolean', { 'default': false }  ]
     };
 
     async execute(data) {

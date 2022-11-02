@@ -10,8 +10,8 @@ import DMX          from '../../../domain-model/X.mjs';
 export default class WordsCreate extends Base {
     static validationRules = {
         moduleId   : [ 'required', 'uuid' ],
-        term       : [ 'required', 'string' ],
-        definition : [ 'required', 'string' ],
+        term       : [ 'required', 'string', 'trim' ],
+        definition : [ 'required', 'string', 'trim' ],
         imageUrl   : [ 'string'  ]
     };
 

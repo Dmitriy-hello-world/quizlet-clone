@@ -23,6 +23,7 @@ export const usersApi = createApi({
           'Authorization': localStorage.getItem(TOKEN),
         },
       }),
+      transformResponse: ({ data }) => data,
     })
   }),
 })

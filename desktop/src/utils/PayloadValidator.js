@@ -5,12 +5,16 @@ export default class PayloadValidator {
         this.checkList = {
             'max-length': (field, length) => field?.length <= length,
             'required': (field) => !!field?.length,
-            'image-size': (field, maxSize) => maxSize > (field?.size || 0)
+            'image-size': (field, maxSize) => maxSize > (field?.size || 0),
+            'image-type': (field, types) => field?.type ? types.includes(field?.type) : true,
+            'trim' : (field) => !!field.trim()?.length
         }
         this.errorMessageMapper = {
             'max-length': 'Your message too long',
             'required' : 'Field is required',
-            'image-size': 'Your image too large'
+            'image-size': 'Your image too large',
+            'image-type': 'Invalid image format',
+            'trim': 'Field is required'
         }
     }
 

@@ -9,9 +9,9 @@ import {
 
 const MAX_FILE_SIZE = 200000;
 const MIME_TYPE_RULES = {
-    images : { 'one_of': [ 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml' ] },
+    images : { 'one_of': [ 'image/jpeg', 'image/jpg', 'image/png', 'image/webp' ] },
     chat   : { 'one_of' : [
-        'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml',
+        'image/jpeg', 'image/jpg', 'image/png',
         'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',        // .doc + .docx
         'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',        // .xls + .xlsx
         'application/x-rar-compressed', 'application/octet-stream',                                             // .rar
