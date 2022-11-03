@@ -5,9 +5,12 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import { PhotoCamera } from '@mui/icons-material';
 
-import { WordType } from '../features/module/moduleSlice';
+import { useSelector } from 'react-redux';
+
+import { getWordsInfo, updateWord, updateWordWithImg, WordType } from '../features/module/moduleSlice';
 
 import { getToken } from '../utils/functions';
+import { useAppDispatch } from '../store/store';
 
 interface Props {
   word: WordType;
@@ -15,9 +18,10 @@ interface Props {
 }
 
 const WordInnerChange: FC<Props> = ({ word, setVisibleType }) => {
+  const dispatch = useAppDispatch();
   const [term, setTerm] = useState(word.term);
   const [definition, setDefinition] = useState(word.definition);
-  const [keepImg, setKeepImg] = useState(false);
+  const [keepImg, setKeepImg] = useState(true);
   const [photoToggle, setPhotoToggle] = useState(false);
   const [file, setFile] = useState<File>();
   const token = getToken();
@@ -31,46 +35,55 @@ const WordInnerChange: FC<Props> = ({ word, setVisibleType }) => {
     if (token) {
       setFile(input.files[0]);
       setPhotoToggle(true);
+      setKeepImg(false);
     }
   };
 
   const onHandleSubmit = () => {
     if (token) {
+      const body = {
+        term,
+        definition,
+        imageUrl: '',
+      };
+
       if (file) {
         const formData = new FormData();
         formData.append('avatar', file);
-
-        //   dispatch(
-        //     CreateWordWithImg({
-        //       token,
-        //       id,
-        //       body: {
-        //         img: formData,
-        //         moduleId: id,
-        //         term,
-        //         definition,
-        //       },
-        //     })
-        //   );
-        // } else {
-        //   dispatch(
-        //     createWord({
-        //       token,
-        //       id,
-        //       page,
-        //       body: {
-        //         moduleId: id,
-        //         term,
-        //         definition,
-        //         imageUrl: '',
-        //       },
-        //     })
-        //   );
+        dispatch(
+          updateWordWithImg({
+            id: word.id,
+            token,
+            body: {
+              term,
+              definition,
+              img: formData,
+            },
+          })
+        );
+      } else {
+        if (keepImg) {
+          body.imageUrl = word.imageUrl;
+          dispatch(
+            updateWord({
+              id: word.id,
+              token,
+              body,
+            })
+          );
+        } else {
+          dispatch(
+            updateWord({
+              id: word.id,
+              token,
+              body,
+            })
+          );
+        }
       }
       setFile(undefined);
       setPhotoToggle(false);
-      setTerm('');
-      setDefinition('');
+      setVisibleType('word');
     }
   };
 
@@ -118,7 +131,7 @@ const WordInnerChange: FC<Props> = ({ word, setVisibleType }) => {
             sx={{ margin: '0 10px' }}
             control={
               <Checkbox
-                value={keepImg}
+                checked={keepImg}
                 onChange={(e) => {
                   if (e.target.checked) {
                     setFile(undefined);

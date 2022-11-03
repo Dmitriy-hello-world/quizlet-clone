@@ -43,6 +43,15 @@ interface UpdtModPrms {
     editedByOutsiders: boolean;
   };
 }
+interface UpdtWordPrms {
+  id: string;
+  token: string;
+  body: {
+    term: string;
+    definition: string;
+    imageUrl: string;
+  };
+}
 
 interface UploadImgType {
   token: string;
@@ -50,6 +59,16 @@ interface UploadImgType {
   body: {
     img: FormData;
     moduleId: string;
+    term: string;
+    definition: string;
+  };
+}
+
+interface UploadImgTypeForWord {
+  token: string;
+  id: string;
+  body: {
+    img: FormData;
     term: string;
     definition: string;
   };
@@ -83,6 +102,21 @@ interface RespForModule {
   };
 }
 
+interface RespForWord {
+  data: {
+    data: {
+      createdAt: string;
+      definition: string;
+      id: string;
+      imageUrl: string;
+      moduleId: string;
+      repeatAt: string;
+      term: string;
+      updatedAt: string;
+    };
+    status: 1 | 0;
+  };
+}
 interface RespForImg {
   data: {
     data: { name: string; originalName: string; key: string; location: string; extention: string };
@@ -219,8 +253,6 @@ export const CreateWordWithImg = createAsyncThunk<RespForImg, UploadImgType, Asy
         },
       });
 
-      console.log(response);
-
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
       } else {
@@ -309,6 +341,62 @@ export const deleteWord = createAsyncThunk<string, DeleteModulePrms, AsyncParams
   }
 );
 
+export const updateWord = createAsyncThunk<RespForWord, UpdtWordPrms, AsyncParams>(
+  '@@module/update-word',
+  async ({ id, token, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
+    try {
+      const response: RespForWord = await client.put(api.UPDATE_WORD_BY_ID(id), body, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.data.status === 0) {
+        throw new Error('incorrect token!');
+      }
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const updateWordWithImg = createAsyncThunk<RespForImg, UploadImgTypeForWord, AsyncParams>(
+  '@@module/update-word-with-img',
+  async ({ token, id, body }, { rejectWithValue, dispatch, extra: { client, api } }) => {
+    try {
+      const response: RespForImg = await client.post(api.UPLOAD_IMG, body.img, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      console.log(response);
+
+      if (response.data.status === 0) {
+        throw new Error('incorrect token!');
+      } else {
+        dispatch(
+          updateWord({
+            token,
+            id,
+            body: {
+              term: body.term,
+              definition: body.definition,
+              imageUrl: response.data.data.key,
+            },
+          })
+        );
+      }
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const moduleSlice = createSlice({
   name: '@@module',
   initialState,
@@ -338,6 +426,15 @@ const moduleSlice = createSlice({
       })
       .addCase(deleteWord.fulfilled, (store, action) => {
         store.words = store.words.filter((word) => word.id !== action.payload);
+      })
+      .addCase(updateWord.fulfilled, (store, action) => {
+        store.words = store.words.map((item) => {
+          if (item.id === action.payload.data.data.id) {
+            return action.payload.data.data;
+          } else {
+            return item;
+          }
+        });
       });
   },
 });
