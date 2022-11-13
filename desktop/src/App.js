@@ -11,6 +11,7 @@ const LoginPage = lazy(async () => await import('./components/pages/Login'));
 const ModulesPage = lazy(async () => await import('./components/pages/Modules'));
 const ModulePage = lazy(async () => await import('./components/pages/Module'));
 const Games = lazy(async () => await import('./components/pages/Games'));
+const Account = lazy(async () => await import('./components/pages/Account'));
 
 function App() {
   const routes = [
@@ -31,6 +32,11 @@ function App() {
     {
       path: 'games/:type/:id',
       element: <Games/>,
+      private: true
+    },
+    {
+      path: 'account',
+      element: <Account/>,
       private: true
     }
   ]

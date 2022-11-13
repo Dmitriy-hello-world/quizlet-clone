@@ -2,9 +2,10 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import { HOST } from '../../../constants';
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
@@ -18,6 +19,32 @@ export default function FlashCards(props) {
     const [ makeFetch, setMakeFetch ] = useState(true);
     const [ refreshKey, setRefresh ] = useState(new Date())
     const [ isFlipped, setFlipped ] = useState(false);
+
+    const handleKeydown = (event) => {
+        switch(event.key) {
+            case 'Enter': {
+                setFlipped(prev => !prev)
+                break;
+            }
+            case 'ArrowRight': {
+                handleResponse(true)
+                break;
+            }
+            case 'ArrowLeft': {
+                handleResponse(false)
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeydown);
+
+        return () => document.removeEventListener('keydown', handleKeydown);
+    }, [ cardsState, current ])
 
     const handleSkipCard = () => setCurrent(prev => (prev + 1) > (cardsState?.length - 1) ? 0 : prev + 1)
 
@@ -59,6 +86,14 @@ export default function FlashCards(props) {
 
     return (
         <div className={styles.cardsBlock}>
+            <div className={cx(styles.buttonBlock, { [styles.fade]: isFlipped })}>
+                <IconButton className={styles.leftArrow} color="error" onClick={() => handleResponse(false)}>
+                    <KeyboardDoubleArrowLeftIcon sx={{ fontSize: 40 }} />
+                </IconButton>
+                <IconButton className={styles.rightArrow} color="success" onClick={() => handleResponse(true)}>
+                    <KeyboardDoubleArrowRightIcon sx={{ fontSize: 40 }} />
+                </IconButton>
+            </div>
         <div key={refreshKey} className={styles.flipCard} onClick={() => setFlipped(prev => !prev)}>
             <Card className={cx(styles.flipCardFront, { [styles.rotate]: isFlipped })}>
                 <IconButton color="primary" className={styles.campaign} onClick={handleCampaignClick} component="label">
@@ -95,10 +130,6 @@ export default function FlashCards(props) {
                     </CardContent>
                 </CardActionArea>
             </Card>
-        </div>
-        <div className={cx(styles.buttonBlock, { [styles.fade]: isFlipped })}>
-            <Button variant="contained" onClick={() => handleResponse(false)} color="error">Wrong</Button>
-            <Button variant="contained" onClick={() => handleResponse(true)} color="success">Right</Button>
         </div>
         </div>     
     )

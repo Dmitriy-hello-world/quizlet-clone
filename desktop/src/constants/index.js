@@ -156,7 +156,7 @@ export const SIGN_UP_TABS = [
       name: 'lang',
       label: 'Your language',
       typeField: 'select',
-      values : Object.entries(LANGUAGES)
+      options : Object.entries(LANGUAGES)
     },
     {
       label: 'Email',
@@ -177,8 +177,11 @@ export const SIGN_UP_TABS = [
 export const WORD_UPDATE_TABS = [
     {
       label: 'Image',
-      name: 'image',
-      typeField: 'image'
+      name: 'imageUrl',
+      typeField: 'image',
+      style : {
+        textAlign: 'center'
+      }
     },
     {
       label: 'Key',

@@ -3,6 +3,7 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import FolderIcon from '@mui/icons-material/Folder';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
 import PropTypes from 'prop-types'
 import { TOKEN } from '../../../constants';
 import { logout } from '../../../features/sessions/sessionSlice';
@@ -27,6 +28,7 @@ export default function Menu(props) {
     return (
         <BottomNavigation sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1111 }} value={value} onChange={handleChange}>
             <BottomNavigationAction label="Modules" value="/modules" icon={<FolderIcon />} />
+            <BottomNavigationAction label="Account" value="/account" icon={<PersonIcon/>}/>
             <BottomNavigationAction label="Logout" value="logout" icon={<LogoutIcon/>}/>
         </BottomNavigation>
     )

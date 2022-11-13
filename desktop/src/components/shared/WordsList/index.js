@@ -15,12 +15,12 @@ import styles from './styles.scss';
 export default function WordsList(props) {
     const { words, handleDelete, setOffset, handleUpdate } = props;
 
-    const handleLazyLoadin = ({ target }) => {
+    const handleLazyLoading = ({ target }) => {
       if ((target.scrollHeight - target.scrollTop) < target.clientHeight) setOffset(prev => prev + 1)
     }
 
     return (
-        <List className={styles.listBlock} onScroll={handleLazyLoadin}>
+        <List className={styles.listBlock} onScroll={handleLazyLoading}>
             {words?.map(word => (
                 <ListItem
                   key={word?.id}
@@ -36,9 +36,10 @@ export default function WordsList(props) {
               }
               >
                 <ListItemAvatar>
-                  <Avatar>
-                    {word?.imageUrl ? <img className={styles.image} src={`${HOST}${word?.imageUrl}`}/> : <PhotoIcon />}
-                  </Avatar>
+                  <Avatar 
+                    src      = {word?.imageUrl ? `${HOST}${word?.imageUrl}` : null} 
+                    children = {<PhotoIcon />} 
+                  />
                 </ListItemAvatar>
                 <ListItemText
                   className={styles.textField}

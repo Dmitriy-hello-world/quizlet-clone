@@ -1,5 +1,3 @@
-import { generateImagesURL } from './imagesURLGeneration.mjs';
-
 export function dumpUser(user) {
     const dump = {
         id         : user.id,
@@ -7,7 +5,7 @@ export function dumpUser(user) {
         firstName  : user.firstName,
         secondName : user.secondName,
         lang       : user?.lang,
-        avatarUrl  : user.avatar ? generateImagesURL(user.avatar) : '',
+        avatarUrl  : user.avatar,
         createdAt  : user.createdAt.toISOString(),
         updatedAt  : user.updatedAt.toISOString()
     };

@@ -7,6 +7,8 @@ import { useCreateWordMutation, useDeleteWordMutation, useGetWordsQuery, useUpda
 import { useCreateImageMutation } from "../../../services/images";
 import { WORD_UPDATE_TABS, PER_PAGE } from "../../../constants";
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import FolderIcon from '@mui/icons-material/Folder';
+import Tooltip from '@mui/material/Tooltip';
 import WordsList from "../../shared/WordsList";
 import { CircularProgress } from "@mui/material";
 import Modal from '../../shared/Modal'
@@ -22,7 +24,7 @@ import styles from './styles.scss';
 const PV = new PayloadValidator({
     term : [ 'required', 'trim' ],
     definition : [ 'required', 'trim' ],
-    image: [ { 'image-size': 200000 }, { 'image-type': [ 'image/jpeg', 'image/png', 'image/webp', 'image/jpg' ] } ]
+    imageUrl: [ { 'image-size': 200000 }, { 'image-type': [ 'image/jpeg', 'image/png', 'image/webp', 'image/jpg' ] } ]
 })
 
 export default function Module() {
@@ -108,8 +110,8 @@ export default function Module() {
     const handleSend = async () => {
         try {
             PV.validate(formData)
-            if (formData?.image) {
-                const url = await uploadImage(formData?.image)
+            if (formData?.imageUrl) {
+                const url = await createImage(formData?.imageUrl).unwrap()
                 const { data: createdWord } = await createWord({ moduleId: id, ...formData, imageUrl: url }).unwrap();
                 setFormData(prev => Object.fromEntries(Object.entries(prev).map(([key]) => [key, ''])))
                 setWordsList(prev => [ createdWord, ...prev ])
@@ -137,18 +139,11 @@ export default function Module() {
         setOpen(true);
     }
 
-    const uploadImage = async (image) => {
-        const form = new FormData();
-        form.append("file", image);
-
-        return await createImage(form).unwrap()
-    }
-
     const onSend = async (payload) => {
         try {
             PV.validate(payload)
-            if (payload?.image) {
-                const url = await uploadImage(payload?.image)
+            if (payload?.imageUrl) {
+                const url = await createImage(payload?.imageUrl).unwrap()
                 const { data: updatedWord } = await updateWord({ ...injectFields, ...payload, imageUrl: url }).unwrap();
                 setWordsList(prev => prev.map(word => word?.id !== updatedWord?.id ? word : updatedWord))
                 setOpen(false)
@@ -158,7 +153,7 @@ export default function Module() {
                 setOpen(false)
             }
         } catch(error) {
-            if (error?.image) return setErrors({ image: error?.image })
+            if (error?.imageUrl) return setErrors({ imageUrl: error?.imageUrl })
             setTabs({
                 Update: WORD_UPDATE_TABS.map(field => ({
                     ...field,
@@ -197,18 +192,28 @@ export default function Module() {
 
     return (
         <>
-            <IconButton color="primary" onClick={handleStartGame('cards')} size="large" className={styles.startButton}>
-                <StyleIcon fontSize="large" />
-            </IconButton>
-            <IconButton sx={{ marginTop: 10 }} color="primary" onClick={handleStartGame('inputs')} size="large" className={styles.startButton}>
-                <KeyboardIcon fontSize="large" />
-            </IconButton>
+            <div className={styles.titleModule}>
+                <FolderIcon color="primary" sx={{ marginBottom: 1 }} fontSize="large"/>
+                <Typography sx={{ marginLeft: 1 }} variant="h5" gutterBottom>
+                    {module?.name}
+                </Typography>
+            </div>
+            <Tooltip title="Play cards game">
+                <IconButton color="primary" onClick={handleStartGame('cards')} size="large" className={styles.startButton}>
+                    <StyleIcon fontSize="large" />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Play input game">
+                <IconButton sx={{ marginTop: 10 }} color="primary" onClick={handleStartGame('inputs')} size="large" className={styles.startButton}>
+                    <KeyboardIcon fontSize="large" />
+                </IconButton>
+            </Tooltip>
             <Modal key={reshreshKey} isOpen={open} hideTabs injectFields={injectFields} onSend={onSend} onClose={() => setOpen(false)} tabs={tabs} defaultTab='Update' />
             <Stack direction="row" className={styles.Stack} justifyContent="center" alignItems="center" spacing={1}>
                 <UploadImage 
                 key={reshreshKey} 
                 onChange={handleSetImage} 
-                error={errors?.image}
+                error={errors?.imageUrl}
                 /> 
                 <TextField 
                     id="standard-basic" 
@@ -249,7 +254,9 @@ export default function Module() {
                 >
                     <Typography id='translated-value' onClick={handlePopoverClick} sx={{ p: 2, cursor: 'pointer' }}>{translateValue}</Typography>
                 </Popover>
-                <IconButton mt={10} color="primary" size="large" onClick={handleSend}><AddBoxIcon sx={{ fontSize: 45 }} /></IconButton>
+                <Tooltip title="Add word">
+                    <IconButton mt={10} color="primary" size="large" onClick={handleSend}><AddBoxIcon sx={{ fontSize: 45 }} /></IconButton>
+                </Tooltip>
             </Stack>
             <Stack justifyContent="center" alignItems="center">
                 <WordsList handleUpdate={handleUpdate} setOffset={setOffset} handleDelete={handleDelete} words={wordsList || []}/>

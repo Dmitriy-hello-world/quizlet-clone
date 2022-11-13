@@ -6,14 +6,19 @@ export const imagesApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
     createImage: builder.mutation({
-      query: (payload) => ({
-        url: 'files/images',
-        method: 'POST',
-        body: payload,
-        headers: {
-          'Authorization': localStorage.getItem(TOKEN),
-        },
-      }),
+      query: (payload) => {
+        const body = new FormData();
+        body.append('file', payload);
+
+        return {
+          url: 'files/images',
+          method: 'POST',
+          body,
+          headers: {
+            'Authorization': localStorage.getItem(TOKEN),
+          },
+        }
+      },
       transformResponse: ({ data }) => data?.key,
       invalidatesTags: ['Post'],
     })
