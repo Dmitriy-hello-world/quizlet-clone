@@ -37,9 +37,9 @@ export default function ModuleCard(props) {
           {`Do you really want to delete "${name}" module ?`}
         </DialogTitle>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>No</Button>
           <Button onClick={handleDelete} autoFocus>
-            Agree
+            Yes
           </Button>
         </DialogActions>
       </Dialog>

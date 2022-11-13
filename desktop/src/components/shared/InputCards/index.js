@@ -5,6 +5,7 @@ import { CardActionArea, TextField, InputAdornment } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { HOST } from '../../../constants';
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
@@ -21,11 +22,14 @@ export default function InputCards(props) {
     const [ refreshKey, setRefresh ] = useState(new Date())
     const [ isFlipped, setFlipped ] = useState(false);
 
-
     const handleKeydown = (event) => {
         switch(event.key) {
             case 'Enter': {
                 handleResponse()
+                break;
+            }
+            case 'ArrowRight': {
+                handleNext()
                 break;
             }
             default: {
@@ -45,15 +49,15 @@ export default function InputCards(props) {
         const result = checkValue()
         result ? setColor('success') : setColor('error');
         onResponse({ id: cardsState[current]?.id, response: result });
+    }
 
-        return setTimeout(() => {
-            if (result) setCardsState(prev => prev.filter(({ id }) => id !== prev[current]?.id))
-            else handleSkipCard()
-            setFlipped(false)
-            setColor('');
-            setValue('')
-            return setRefresh(new Date());
-        }, 3000)
+    const handleNext = () => {
+        if (color === 'success') setCardsState(prev => prev.filter(({ id }) => id !== prev[current]?.id))
+        else handleSkipCard()
+        setFlipped(false)
+        setColor('');
+        setValue('')
+        return setRefresh(new Date());
     }
 
     useEffect(() => {
@@ -92,6 +96,11 @@ export default function InputCards(props) {
 
     return (
         <div className={styles.cardsBlock}>
+            <div className={cx(styles.buttonBlock, { [styles.fade]: isFlipped })}>
+                <IconButton color="primary" onClick={handleNext}>
+                    <KeyboardDoubleArrowRightIcon sx={{ fontSize: 40 }} />
+                </IconButton>
+            </div>   
         <div key={refreshKey} className={styles.flipCard}>
             <Card className={cx(styles.flipCardFront, { [styles.rotate]: isFlipped })}>
                 <CardActionArea sx={{ height: '100%', width: '100%' }}>

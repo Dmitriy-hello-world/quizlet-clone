@@ -1,5 +1,6 @@
 .cardsBlock {
     display: flex;
+    position: relative;
     flex-direction: column;
 
     .cardText {
@@ -60,9 +61,18 @@
 
     .buttonBlock {
         opacity: 0;
-        margin-top: 50px;
-        display: flex;
-        justify-content: space-around;
+
+        .rightArrow { 
+            position: absolute;
+            top: calc(50% - 40px);
+            right: -80px;
+        }
+
+        .leftArrow {
+            position: absolute;
+            top: calc(50% - 40px);
+            left: -80px;
+        }
     }
 
     .fade {

@@ -24,8 +24,29 @@ export const usersApi = createApi({
         },
       }),
       transformResponse: ({ data }) => data,
+    }),
+    updateUser: builder.mutation({
+      query: ({ id, ...payload}) => ({
+        url: `users/${id}`,
+        method: 'PUT',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          'Authorization': localStorage.getItem(TOKEN),
+        }
+      }),
+      invalidatesTags: ['Post']
+    }),
+    deleteUser: builder.mutation({
+      query: ({ id }) => ({
+        url: `users/${id}`,
+        method: 'DELETE',
+        headers: {
+          'Authorization': localStorage.getItem(TOKEN)
+        }
+      })
     })
   }),
 })
 
-export const { useCreateUserMutation, useGetProfileQuery } = usersApi
+export const { useCreateUserMutation, useGetProfileQuery, useUpdateUserMutation, useDeleteUserMutation } = usersApi

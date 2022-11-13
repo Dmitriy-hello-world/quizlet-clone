@@ -12,6 +12,7 @@ export default class UsersUpdate extends Base {
         id         : [ 'required', 'uuid' ],
         firstName  : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
         secondName : [ 'string', { 'min_length': 2 }, { 'max_length': 50 } ],
+        lang       : [ 'string', { 'max_length': 6 } ],
         avatar     : [ 'string', { 'min_length': 2 }, { 'max_length': 150 } ]
     };
 

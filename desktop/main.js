@@ -13,7 +13,7 @@ function createWindow () {
   })
 
   mainWindow.maximize()
-
+  mainWindow.removeMenu()
   mainWindow.loadURL(isDev ? 'http://localhost:8080' : `file://${path.join(__dirname, 'build/index.html')}`)
 
   // Open the DevTools.

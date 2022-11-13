@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { IconButton } from "@mui/material";
 import FlashCards from "../../shared/FlashCards";
 import InputCards from '../../shared/InputCards';
+import { Tooltip } from '@mui/material';
 import { useGetWordsQuery, useResponseWordMutation } from "../../../services/words";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { PER_PAGE } from '../../../constants';
@@ -32,9 +33,11 @@ export default function CardsGame() {
 
     return (
         <>
-            <IconButton color="primary" onClick={handleReturn} size="large" className={styles.stopButton}>
-                <ArrowCircleLeftIcon fontSize="large" />
-            </IconButton>
+            <Tooltip title="Back">
+                <IconButton color="primary" onClick={handleReturn} size="large" className={styles.stopButton}>
+                    <ArrowCircleLeftIcon fontSize="large" />
+                </IconButton>
+            </Tooltip>
             <div className={styles.cardsBlock}>
                 {isLoading ? 
                 <CircularProgress sx={{ position: 'absolute', top: '45%', left: '50%' }}/> : 

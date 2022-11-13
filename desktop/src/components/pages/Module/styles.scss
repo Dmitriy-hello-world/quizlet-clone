@@ -1,3 +1,10 @@
+.titleModule {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: -10px;
+}
 .startButton {
     position: absolute;
     right: 10px;
