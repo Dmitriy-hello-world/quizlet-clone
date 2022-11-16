@@ -35,7 +35,7 @@ const ModulePage: FC = () => {
   return (
     <Box sx={BoxStyled}>
       <ModuleTitle name={module.name} description={module.description} />
-      <GamesBtns />
+      <GamesBtns id={id} />
       <WordsList words={words} />
       <AddNewWord id={id} />
       <WordsPagination id={id} />

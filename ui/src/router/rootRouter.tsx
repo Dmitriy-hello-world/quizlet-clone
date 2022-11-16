@@ -9,6 +9,7 @@ const MainPage = lazy(async () => await import('../pages/mainPage'));
 const PersonalPage = lazy(async () => await import('../pages/personalPage'));
 const NotFoundPage = lazy(async () => await import('../pages/notFound/notFoundPage'));
 const ModulePage = lazy(async () => await import('../pages/modulePage'));
+const FlashCardsPage = lazy(async () => await import('../pages/flashCardsPage'));
 
 const RootRouter: FC = () => {
   return (
@@ -35,6 +36,14 @@ const RootRouter: FC = () => {
           element={
             <Suspense fallback={<Spinner style={spinnerStyled} />}>
               <ModulePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="personal/:id/flashCards"
+          element={
+            <Suspense fallback={<Spinner style={spinnerStyled} />}>
+              <FlashCardsPage />
             </Suspense>
           }
         />

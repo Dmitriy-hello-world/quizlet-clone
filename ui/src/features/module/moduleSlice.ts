@@ -199,6 +199,27 @@ export const loadWords = createAsyncThunk<ResponseTypes, WordsPrms, AsyncParams>
   }
 );
 
+export const loadWordsForCards = createAsyncThunk<ResponseTypes, WordsPrms, AsyncParams>(
+  '@@module/load-words-for-cards',
+  async ({ id, page, token }, { dispatch, rejectWithValue, extra: { client, api } }) => {
+    try {
+      const response: ResponseTypes = await client.get(api.GET_WORDS_FOR_CARDS(id, page), {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.data.status === 0) {
+        throw new Error('incorrect token!');
+      }
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const loadModule = createAsyncThunk<RespForModule, ModulePrms, AsyncParams>(
   '@@module/load-module',
   async ({ id, token }, { rejectWithValue, extra: { client, api } }) => {
@@ -372,8 +393,6 @@ export const updateWordWithImg = createAsyncThunk<RespForImg, UploadImgTypeForWo
         },
       });
 
-      console.log(response);
-
       if (response.data.status === 0) {
         throw new Error('incorrect token!');
       } else {
@@ -404,6 +423,9 @@ const moduleSlice = createSlice({
     setPage: (store, action) => {
       store.page = action.payload;
     },
+    resetWords: (store) => {
+      store.words = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -427,6 +449,11 @@ const moduleSlice = createSlice({
       .addCase(deleteWord.fulfilled, (store, action) => {
         store.words = store.words.filter((word) => word.id !== action.payload);
       })
+      .addCase(loadWordsForCards.fulfilled, (store, action) => {
+        store.status = 'received';
+        store.totalCount = action.payload.data.meta.totalCount;
+        store.words = [...store.words, ...action.payload.data.data];
+      })
       .addCase(updateWord.fulfilled, (store, action) => {
         store.words = store.words.map((item) => {
           if (item.id === action.payload.data.data.id) {
@@ -441,7 +468,7 @@ const moduleSlice = createSlice({
 
 export const moduleReducer = moduleSlice.reducer;
 
-const { setPage } = moduleSlice.actions;
+export const { setPage, resetWords } = moduleSlice.actions;
 
 export const getWords = (state: RootState) => state.module.words;
 
