@@ -4,7 +4,7 @@ networks:
     name: memorizer
 services:
   percona:
-    build: zgltyq/hisoka-percona:latest
+    image: zgltyq/hisoka-percona:latest
     container_name: percona
     restart: always
     environment:
@@ -57,7 +57,7 @@ services:
       - minio
     command: /opt/minio.init
   nginx:
-    build: zgltyq/hisoka-nginx:latest
+    image: zgltyq/hisoka-nginx:latest
     container_name: nginx
     restart: always
     environment:
