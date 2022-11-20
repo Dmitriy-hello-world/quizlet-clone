@@ -4,7 +4,7 @@ networks:
     name: memorizer
 services:
   percona:
-    build: ../percona
+    build: zgltyq/hisoka-percona:latest
     container_name: percona
     restart: always
     environment:
@@ -15,7 +15,7 @@ services:
     volumes:
       - ${ROOT_DIR}/system/mysql:/var/lib/mysql
   be:
-    build: ../be
+    image: zgltyq/hisoka-be:latest
     container_name: be
     restart: always
     command: sh -c "npm run migration:db && npm start"
@@ -36,7 +36,7 @@ services:
       - DB_PASSWORD=${MYSQL_PASSWORD:-adminpass}
       - DB_HOST=${MYSQL_HOST:-percona}
   minio:
-    build: ../minio
+    image: zgltyq/hisoka-minio:latest
     container_name: minio
     restart: always
     command: server /data
@@ -46,7 +46,7 @@ services:
     volumes:
       - ${ROOT_DIR}/system/minio:/data
   minio-client:
-    build: ../minio-client
+    image: zgltyq/hisoka-minio-client:latest
     container_name: minio-client
     environment:
       - MINIO_HOST=${MINIO_HOST:-minio}
@@ -57,7 +57,7 @@ services:
       - minio
     command: /opt/minio.init
   nginx:
-    build: ../nginx
+    build: zgltyq/hisoka-nginx:latest
     container_name: nginx
     restart: always
     environment:
@@ -68,17 +68,17 @@ services:
       - ${ROOT_DIR}/system/certbot/www:/var/www/certbot
     ports:
       - 80:80
-      # - 443:443
+      - 443:443
   ui:
-    build: ../ui
+    image: zgltyq/hisoka-ui:latest
     container_name: ui
     restart: always
-  # certbot:
-  #   image: certbot/certbot
-  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-  #   container_name: certbot
-  #   volumes:
-  #     - ${ROOT_DIR}/system/certbot/conf:/etc/letsencrypt
-  #     - ${ROOT_DIR}/system/certbot/www:/var/www/certbot
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    container_name: certbot
+    volumes:
+      - ${ROOT_DIR}/system/certbot/conf:/etc/letsencrypt
+      - ${ROOT_DIR}/system/certbot/www:/var/www/certbot
     
 
