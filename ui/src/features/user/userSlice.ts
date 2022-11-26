@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axiosType, apiType, RootState } from '../../store/store';
 
+import { LangKey } from '../../utils/constants';
 interface InitialState {
   user: {
     id: null | string;
@@ -11,6 +12,7 @@ interface InitialState {
     avatarUrl: null | string;
     createdAt: null | string;
     updatedAt: null | string;
+    lang: LangKey;
   };
   status: 'idle' | 'loading' | 'rejected' | 'received';
   isAuthorized: boolean;
@@ -26,6 +28,7 @@ interface userInfoResp {
       avatarUrl: string;
       createdAt: string;
       updatedAt: string;
+      lang: LangKey;
     };
     status: 1 | 0;
   };
@@ -40,6 +43,7 @@ const initialState: InitialState = {
     avatarUrl: null,
     createdAt: null,
     updatedAt: null,
+    lang: 'en',
   },
   status: 'idle',
   isAuthorized: false,

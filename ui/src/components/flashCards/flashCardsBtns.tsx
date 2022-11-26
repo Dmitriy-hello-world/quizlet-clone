@@ -1,5 +1,5 @@
 import { Stack } from '@mui/system';
-import { FC, useState } from 'react';
+import { FC, RefObject, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -15,13 +15,16 @@ interface Props {
   totalCount: number;
   length: number;
   setIterator: (n: number) => void;
+  slidesRefElement: RefObject<HTMLDivElement>;
 }
 
-const FlashCardsBtns: FC<Props> = ({ iterator, setIterator, totalCount, length }) => {
+const FlashCardsBtns: FC<Props> = ({ iterator, setIterator, totalCount, length, slidesRefElement }) => {
   const dispatch = useAppDispatch();
+  const prevBtn = useRef<HTMLButtonElement>(null);
+  const nextBtn = useRef<HTMLButtonElement>(null);
+  const [page, setPage] = useState(1);
   const { id = '' } = useParams();
   const token = getToken();
-  const [page, setPage] = useState(1);
   const maxPage = (totalCount - (totalCount % 20)) / 20 + 1;
 
   const handleSetIterator = (type: 'plus' | 'minus') => {
@@ -44,9 +47,34 @@ const FlashCardsBtns: FC<Props> = ({ iterator, setIterator, totalCount, length }
     }
   };
 
+  useEffect(() => {
+    const setUpListeners = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && prevBtn.current) {
+        prevBtn.current.click();
+      } else if (e.key === 'ArrowRight' && nextBtn.current) {
+        nextBtn.current.click();
+      } else if (e.keyCode === 32) {
+        e.preventDefault();
+        if (slidesRefElement.current) {
+          const matrix = new WebKitCSSMatrix(window.getComputedStyle(slidesRefElement.current).transform);
+          const id = Math.abs(Math.round(matrix.m41 / 745));
+          if (slidesRefElement.current.children[id]) {
+            (slidesRefElement.current.children[id] as HTMLElement).click();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', setUpListeners);
+    return () => {
+      window.removeEventListener('keydown', setUpListeners);
+    };
+  }, []);
+
   return (
     <Stack sx={BtnsStyled} direction="row" spacing={2}>
       <Button
+        ref={prevBtn}
         disabled={iterator <= 0}
         onClick={() => handleSetIterator('minus')}
         size="large"
@@ -59,6 +87,7 @@ const FlashCardsBtns: FC<Props> = ({ iterator, setIterator, totalCount, length }
         {iterator / 745 + 1} / {totalCount}
       </span>
       <Button
+        ref={nextBtn}
         disabled={iterator >= (totalCount - 1) * 745}
         onClick={() => handleSetIterator('plus')}
         size="large"

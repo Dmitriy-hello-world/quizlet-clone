@@ -1,6 +1,8 @@
+import translate, { setCORS } from 'google-translate-api-browser';
+
 import { PhotoCamera } from '@mui/icons-material';
 import { Stack, TextField, Button, IconButton, Avatar, Box } from '@mui/material';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import ClearIcon from '@mui/icons-material/Clear';
@@ -11,6 +13,21 @@ import { getUserInfoSelector } from '../user/userSlice';
 
 import { CreateWordWithImg, createWord, getWordsInfo } from './moduleSlice';
 
+interface RespTranslate {
+  text: string;
+  pronunciation: string;
+  from: {
+    language: {
+      didYouMean: boolean;
+      iso: string;
+    };
+    text: {
+      autoCorrected: boolean;
+      value: string;
+      didYouMean: boolean;
+    };
+  };
+}
 interface Props {
   id: string;
 }
@@ -20,10 +37,35 @@ const AddNewWord: FC<Props> = ({ id }) => {
   const [definition, setDefinition] = useState('');
   const [photoToggle, setPhotoToggle] = useState(false);
   const [file, setFile] = useState<File>();
-  const { isAuthorized } = useSelector(getUserInfoSelector);
+  const { isAuthorized, user } = useSelector(getUserInfoSelector);
   const { page } = useSelector(getWordsInfo);
   const dispatch = useAppDispatch();
   const token = getToken();
+
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout>();
+  setCORS('http://cors-anywhere.herokuapp.com/');
+  useEffect(() => {
+    if (term.length > 1 && token) {
+      clearTimeout(searchTimeout);
+      setSearchTimeout(
+        setTimeout(() => {
+          if (definition.length === 0) {
+            translate(term, { to: user.lang })
+              .then((res: RespTranslate) => {
+                if (definition.length === 0 && res.text !== term) {
+                  setDefinition(res.text);
+                }
+              })
+              .catch(() => {
+                if (definition.length === 0) {
+                  setDefinition('');
+                }
+              });
+          }
+        }, 1000)
+      );
+    }
+  }, [term]);
 
   const onHandleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement;
@@ -85,7 +127,9 @@ const AddNewWord: FC<Props> = ({ id }) => {
             <TextField
               sx={inputStyled}
               value={term}
-              onChange={(e) => setTerm(e.target.value)}
+              onChange={(e) => {
+                setTerm(e.target.value);
+              }}
               id="standard-basic"
               label="Term"
               variant="standard"

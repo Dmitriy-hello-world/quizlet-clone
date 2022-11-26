@@ -1,4 +1,4 @@
-export const SERVER_URL = 'http://hisokacards.online';
+export const SERVER_URL = 'https://hisokacards.online';
 
 export const BASE_URL = SERVER_URL + '/api/v1';
 // export const BASE_URL = 'http://localhost/api/v1';

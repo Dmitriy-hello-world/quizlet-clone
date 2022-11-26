@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getWords, getWordsInfo } from '../../features/module/moduleSlice';
@@ -10,12 +10,16 @@ import FlashCardsBtns from './flashCardsBtns';
 const FlashCardsSlider: FC = () => {
   const [slideOffset, setSlideOffset] = useState(0);
   const words = useSelector(getWords);
+  const slides = useRef<HTMLDivElement>(null);
   const { totalCount } = useSelector(getWordsInfo);
 
   return (
     <Box sx={SliderStyled}>
       <Box sx={SliderWindowStyled}>
-        <Box sx={{ ...SliderInnerStyled, width: `${745 * totalCount}px`, transform: `translateX(-${slideOffset}px)` }}>
+        <Box
+          ref={slides}
+          sx={{ ...SliderInnerStyled, width: `${745 * totalCount}px`, transform: `translateX(-${slideOffset}px)` }}
+        >
           {words.map((word, i) => {
             return <FlashCard width={745} key={i} word={word} />;
           })}
@@ -26,6 +30,7 @@ const FlashCardsSlider: FC = () => {
         totalCount={totalCount}
         iterator={slideOffset}
         setIterator={(n: number) => setSlideOffset(n)}
+        slidesRefElement={slides}
       />
     </Box>
   );

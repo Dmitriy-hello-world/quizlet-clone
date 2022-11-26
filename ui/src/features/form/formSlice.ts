@@ -28,6 +28,7 @@ interface CreateUserResp {
       avatarUrl: string;
       createdAt: string;
       updatedAt: string;
+      lang: string;
     };
     status: 1 | 0;
   };
@@ -68,6 +69,8 @@ export const createUser = createAsyncThunk<CreateUserResp, FormValues, { extra: 
           dispatch(openModal('log'));
         }, 500);
       }
+
+      console.log(response);
 
       return response;
     } catch (error) {

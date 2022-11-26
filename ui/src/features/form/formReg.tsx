@@ -1,12 +1,14 @@
-import { FC, useRef } from 'react';
+import { FC, useRef, useState } from 'react';
 
-import { Box, Input, Button, Stack } from '@mui/material';
+import { Box, Input, Button, Stack, Select, MenuItem } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
 import SendIcon from '@mui/icons-material/Send';
 
 import { useAppDispatch } from '../../store/store';
+
+import { languages } from '../../utils/constants';
 
 import { createUser } from './formSlice';
 
@@ -16,6 +18,7 @@ export type FormValues = {
   email: string;
   password: string;
   confirmPassword: string;
+  lang: string;
 };
 
 const ModalReg: FC = () => {
@@ -41,6 +44,7 @@ const ModalReg: FC = () => {
     myForm.current?.reset();
   };
   const dispatch = useAppDispatch();
+  const [lang, setLang] = useState('en');
 
   return (
     <form
@@ -194,6 +198,35 @@ const ModalReg: FC = () => {
                   onChange={onChange}
                   onBlur={onBlur}
                 />
+              </label>
+            )}
+          />
+          <Controller
+            control={control}
+            name="lang"
+            render={({ field: { onChange, onBlur } }) => (
+              <label>
+                <div>Language:</div>
+                <Select
+                  sx={{ margin: '5px 0 10px 0', textAlign: 'left', padding: '0 5px' }}
+                  fullWidth={true}
+                  id="demo-multiple-name"
+                  value={lang}
+                  onBlur={onBlur}
+                  variant="standard"
+                  onChange={(e) => {
+                    setLang(e.target.value);
+                    onChange(e);
+                  }}
+                >
+                  {Object.entries(languages).map((lang, i) => {
+                    return (
+                      <MenuItem key={i} value={lang[0]}>
+                        {lang[1]}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
               </label>
             )}
           />
