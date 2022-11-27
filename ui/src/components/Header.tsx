@@ -110,7 +110,7 @@ const Header: FC = () => {
             }}
           >
             <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
-              QUIZLET
+              HC
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
